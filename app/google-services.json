@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "148073257823",
+    "project_id": "social-1ab90",
+    "storage_bucket": "social-1ab90.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:148073257823:android:54f1e6190fb79c3eb0b4ea",
+        "android_client_info": {
+          "package_name": "kushal.application.social"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "148073257823-8iqc6egmbadnl09h700ckj9tlg6c0rs9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvhjLDdXU0-EFdb0Z7-nR0oMpag4-l6qM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "148073257823-8iqc6egmbadnl09h700ckj9tlg6c0rs9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
