@@ -62,8 +62,9 @@ public class PostActivity extends AppCompatActivity {
 
     private void upload() {
 
-        final ProgressDialog pd = new ProgressDialog(this);
-        pd.setMessage("Uploading");
+        final ProgressDialog pd = new ProgressDialog(this, R.style.progress_dialog_theme);
+        pd.setMessage("Please Wait...");
+        pd.setTitle("Posting");
         pd.setCancelable(false);
         pd.show();
 
@@ -112,15 +113,20 @@ public class PostActivity extends AppCompatActivity {
                 }
 
                 pd.dismiss();
+                startActivity(new Intent(PostActivity.this, MainActivity.class));
                 finish();
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(PostActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(PostActivity.this, MainActivity.class));
+                    finish();
                 }
             });
         } else {
             Toast.makeText(this, "No image was selected!", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(PostActivity.this, MainActivity.class));
+            finish();
         }
 
     }
@@ -136,10 +142,9 @@ public class PostActivity extends AppCompatActivity {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             imageUri = result.getUri();
-
             imageAdded.setImageURI(imageUri);
         } else {
-            Toast.makeText(this, "Try again", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(PostActivity.this, MainActivity.class));
             finish();
         }
     }

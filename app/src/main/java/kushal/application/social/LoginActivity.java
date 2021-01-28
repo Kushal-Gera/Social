@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -31,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
     TextView login, next;
     ProgressBar progressBar;
     LinearLayout linearLayout;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,19 +64,10 @@ public class LoginActivity extends AppCompatActivity {
                 otp.setVisibility(View.VISIBLE);
                 login.setVisibility(View.VISIBLE);
                 next.setVisibility(View.INVISIBLE);
-//                return;
             } else {
                 phone.getEditText().setError("Phone Number Required");
                 phone.requestFocus();
             }
-//
-//              even I don't how this coding is working, I just pasted it :p
-//            View view = getCurrentFocus();
-//            if (view != null) {
-//                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-//            }
-//              but I am sure that after this 'keyboard is gone'
         });
 
         login.setOnClickListener(v -> {
@@ -89,38 +80,39 @@ public class LoginActivity extends AppCompatActivity {
                 otp.requestFocus();
             }
         });
-
     }
 
     private void verifyCode(String userCode) {
         try {
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(VERIFICATION_ID, userCode);
-            signInWith(credential);
+            signInWithPhoneAuthCredential(credential);
         } catch (Exception e) {
             Toast.makeText(this, "Invalid OTP", Toast.LENGTH_LONG).show();
-//            startActivity(new Intent(this, LoginActivity.class));
-//            finish();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
         }
     }
 
-    private void signInWith(PhoneAuthCredential credential) {
-        Toast.makeText(this, "Hold on, Just There...", Toast.LENGTH_SHORT).show();
-
-        auth.signInWithCredential(credential).addOnCompleteListener(task -> {
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        auth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
+                Log.d("TAG", "signInWithCredential:success");
+                Toast.makeText(this, "Hold on, Just There...", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
+            } else {
+                Log.d("TAG", "signInWithCredential:failure", task.getException());
+                if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                    Toast.makeText(LoginActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LoginActivity.this, LoginActivity.class));
+                    finish();
+                }
             }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(LoginActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(LoginActivity.this, LoginActivity.class));
-            finish();
         });
-
     }
 
     private void getVerificationCode(String phoneNumber) {
-        PhoneAuthOptions options = PhoneAuthOptions.newBuilder()
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(auth)
                 .setPhoneNumber(phoneNumber)
                 .setTimeout(60L, TimeUnit.SECONDS)
                 .setActivity(this)
@@ -136,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onVerificationCompleted(PhoneAuthCredential credential) {
             Log.d("onVerificationCompleted", "onVerificationCompleted:" + credential);
-            signInWith(credential);
+            signInWithPhoneAuthCredential(credential);
         }
 
         @Override
@@ -148,10 +140,26 @@ public class LoginActivity extends AppCompatActivity {
         public void onCodeSent(@NonNull String verificationId,
                                @NonNull PhoneAuthProvider.ForceResendingToken token) {
             Log.d("onCodeSent", "onCodeSent:" + verificationId);
-
             VERIFICATION_ID = verificationId;
         }
     };
+}
+
+//    private void signInWith(PhoneAuthCredential credential) {
+//        Toast.makeText(this, "Hold on, Just There...", Toast.LENGTH_SHORT).show();
+//
+//        auth.signInWithCredential(credential).addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                finish();
+//            }
+//        }).addOnFailureListener(e -> {
+//            Toast.makeText(LoginActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
+//            startActivity(new Intent(LoginActivity.this, LoginActivity.class));
+//            finish();
+//        });
+//
+//    }
 
 //    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks =
 //            new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -175,5 +183,3 @@ public class LoginActivity extends AppCompatActivity {
 //                    VERIFICATION_ID = s;
 //                }
 //            };
-
-}

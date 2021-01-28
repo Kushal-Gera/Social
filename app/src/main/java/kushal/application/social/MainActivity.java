@@ -56,12 +56,12 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        Query q = ref.child("users").child(auth.getUid()).child("info");
+        Query q = ref.child("users").child(auth.getUid());
         q.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.child("name").exists()) {
-//                    startActivity(new Intent(getApplicationContext(), SettingsActvity.class));
+//                    startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                     Toast.makeText(getApplicationContext(), "Name not Found", Toast.LENGTH_SHORT).show();
                 }
             }
