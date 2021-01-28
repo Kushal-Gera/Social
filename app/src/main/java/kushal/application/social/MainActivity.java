@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,7 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +31,10 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout container;
     BottomNavigationView bottom_navbar;
     DatabaseReference ref;
-    FirebaseAuth auth;
+    FirebaseUser auth;
+
+    ImageView post_now;
+    FrameLayout chat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +44,13 @@ public class MainActivity extends AppCompatActivity {
         container = findViewById(R.id.container);
         bottom_navbar = findViewById(R.id.bottom_navbar);
 
-        auth = FirebaseAuth.getInstance();
+        post_now = findViewById(R.id.post_now);
+        chat = findViewById(R.id.chat);
+
+        auth = FirebaseAuth.getInstance().getCurrentUser();
         ref = FirebaseDatabase.getInstance().getReference();
         if (auth == null) {
-            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+            Intent i = new Intent(MainActivity.this, LoginActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
             finish();
@@ -67,6 +74,10 @@ public class MainActivity extends AppCompatActivity {
 
         setBottomNavBar();
         getSupportFragmentManager().beginTransaction().replace(container.getId(), new HomeFrag()).commit();
+
+        post_now.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, PostActivity.class));
+        });
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -83,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     frag = new SearchFrag();
                     break;
                 case R.id.post:
-//                    startActivity(new Intent(MainActivity.this, PostActivity.class));
+                    startActivity(new Intent(MainActivity.this, PostActivity.class));
                     break;
                 case R.id.discover:
                     frag = new DiscoverFrag();

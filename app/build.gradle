@@ -47,5 +47,6 @@ dependencies {
     implementation "com.hendraanggrian.appcompat:socialview-commons:0.2"
     implementation 'de.hdodenhof:circleimageview:3.0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 
 }

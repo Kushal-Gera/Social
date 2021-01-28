@@ -8,8 +8,6 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 import kushal.application.social.R;
 
 public class HomeFrag extends Fragment {
@@ -26,9 +24,10 @@ public class HomeFrag extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
+//                FirebaseAuth.getInstance().signOut();
             }
         });
+
 
         return view;
 

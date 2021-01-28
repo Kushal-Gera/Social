@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         }).addOnFailureListener(e -> {
             Toast.makeText(LoginActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            startActivity(new Intent(LoginActivity.this, LoginActivity.class));
             finish();
         });
 
