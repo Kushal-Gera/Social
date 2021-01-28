@@ -22,9 +22,9 @@
         android:title="@string/discover" />
 
     <item
-        android:id="@+id/account"
+        android:id="@+id/profile"
         android:icon="@drawable/ic_baseline_person_24"
-        android:title="@string/account" />
+        android:title="@string/profile" />
 
 
 </menu>
