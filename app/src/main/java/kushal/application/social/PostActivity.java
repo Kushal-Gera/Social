@@ -54,7 +54,6 @@ public class PostActivity extends AppCompatActivity {
         description = findViewById(R.id.description);
 
         close.setOnClickListener(v -> {
-            startActivity(new Intent(PostActivity.this, MainActivity.class));
             finish();
         });
 
@@ -116,19 +115,16 @@ public class PostActivity extends AppCompatActivity {
                 }
 
                 pd.dismiss();
-                startActivity(new Intent(PostActivity.this, MainActivity.class));
                 finish();
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(PostActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(PostActivity.this, MainActivity.class));
                     finish();
                 }
             });
         } else {
             Toast.makeText(this, "No image was selected!", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(PostActivity.this, MainActivity.class));
             finish();
         }
 
@@ -147,7 +143,6 @@ public class PostActivity extends AppCompatActivity {
             imageUri = result.getUri();
             imageAdded.setImageURI(imageUri);
         } else {
-            startActivity(new Intent(PostActivity.this, MainActivity.class));
             finish();
         }
     }

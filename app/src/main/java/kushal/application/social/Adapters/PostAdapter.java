@@ -1,6 +1,9 @@
 package kushal.application.social.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +25,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import kushal.application.social.CommentActivity;
+import kushal.application.social.DoubleClickListener;
 import kushal.application.social.Models.Post;
 import kushal.application.social.R;
 
@@ -45,6 +50,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         return new PostAdapter.Viewholder(view);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull PostAdapter.Viewholder holder, int position) {
 
@@ -99,8 +105,45 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             }
         });
 
-    }
+        holder.post_image.setOnClickListener(new DoubleClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                mcontext.startActivity(new Intent(mcontext, CommentActivity.class));
+            }
 
+            @Override
+            public void onDoubleClick(View v) {
+                holder.like_heart.setVisibility(View.VISIBLE);
+                FirebaseDatabase.getInstance().getReference().child("likes")
+                        .child(post.getPost_id()).child(auth.getUid()).setValue(true);
+
+                Handler handler = new Handler();
+
+                handler.postDelayed(() -> {
+                    holder.like_heart.animate()
+                            .scaleX(0.1f).scaleY(0.1f).alpha(0.4f)
+                            .setDuration(500);
+                }, 200);
+
+                handler.postDelayed(() -> {
+                    holder.like_heart.setVisibility(View.GONE);
+                    holder.like_heart.animate()
+                            .scaleX(1f).scaleY(1f).alpha(1f)
+                            .setDuration(0);
+                }, 750);
+
+            }
+        });
+
+        holder.comment.setOnClickListener(v -> {
+            mcontext.startActivity(new Intent(mcontext, CommentActivity.class));
+        });
+        
+        holder.noOfComments.setOnClickListener(v -> {
+            mcontext.startActivity(new Intent(mcontext, CommentActivity.class));
+        });
+
+    }
 
     private void isLiked(String post_id, ImageView like) {
         FirebaseDatabase.getInstance().getReference()
@@ -175,7 +218,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         public ImageView like;
         public ImageView comment;
         public ImageView save;
-        public ImageView more;
+        public ImageView more, like_heart;
 
         public TextView user_name;
         public TextView noOfLikes;
@@ -199,6 +242,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             noOfComments = itemView.findViewById(R.id.no_of_comments);
             description = itemView.findViewById(R.id.description);
 
+            like_heart = itemView.findViewById(R.id.like_heart);
         }
     }
 }

@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottom_navbar;
     DatabaseReference ref;
     FirebaseUser auth;
+    private Boolean AT_HOME = true;
+    int PRE_SELECTED_ID = 0;
 
     ImageView post_now;
     FrameLayout chat;
@@ -58,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
 
         chat.setOnLongClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
+
+            Intent i = new Intent(MainActivity.this, LoginActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+            finish();
+
             return true;
         });
 
@@ -78,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setBottomNavBar();
+        AT_HOME = true;
         getSupportFragmentManager().beginTransaction().replace(container.getId(), new HomeFrag()).commit();
 
         post_now.setOnClickListener(v -> {
@@ -92,19 +101,25 @@ public class MainActivity extends AppCompatActivity {
             Fragment frag = null;
 
             switch (item.getItemId()) {
-                case R.id.home:
-                    frag = new HomeFrag();
+                case R.id.homepage:
+                    if (!AT_HOME)
+                        frag = new HomeFrag();
+                    AT_HOME = true;
                     break;
                 case R.id.search:
                     frag = new SearchFrag();
+                    AT_HOME = false;
                     break;
                 case R.id.post:
+                    PRE_SELECTED_ID = bottom_navbar.getSelectedItemId();
                     startActivity(new Intent(MainActivity.this, PostActivity.class));
                     break;
                 case R.id.discover:
+                    AT_HOME = false;
                     frag = new DiscoverFrag();
                     break;
                 case R.id.profile:
+                    AT_HOME = false;
                     frag = new ProfileFrag();
                     break;
                 default:
@@ -117,5 +132,27 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (bottom_navbar.getSelectedItemId() == R.id.post) {
+            if (PRE_SELECTED_ID != 0)
+                bottom_navbar.setSelectedItemId(PRE_SELECTED_ID);
+            else
+                bottom_navbar.setSelectedItemId(R.id.homepage);
+
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (AT_HOME)
+            super.onBackPressed();
+        else {
+            bottom_navbar.findViewById(R.id.homepage).performClick();
+            AT_HOME = true;
+        }
     }
 }

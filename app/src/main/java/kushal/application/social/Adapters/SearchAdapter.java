@@ -13,7 +13,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
@@ -36,6 +35,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         this.mContext = mContext;
         this.mUsers = mUsers;
         this.isFargment = isFargment;
+        auth = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @NonNull
@@ -47,8 +47,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-
-        auth = FirebaseAuth.getInstance().getCurrentUser();
 
         final User user = mUsers.get(position);
         holder.btnFollow.setVisibility(View.VISIBLE);
@@ -69,19 +67,23 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         holder.btnFollow.setOnClickListener(v -> {
 
             if (holder.btnFollow.getText().toString().equals("Follow")) {
+                FirebaseDatabase.getInstance().getReference()
+                        .child("followings").child(auth.getUid())
+                        .child(user.getId()).setValue(true);
 
-                FirebaseDatabase.getInstance().getReference().child("users").child(auth.getUid())
-                        .child("following").child(user.getId()).setValue(true);
-
-                FirebaseDatabase.getInstance().getReference().child("users").child(user.getId())
-                        .child("followers").child(auth.getUid()).setValue(true);
+                FirebaseDatabase.getInstance().getReference()
+                        .child("followers").child(user.getId()).child(auth.getUid())
+                        .setValue(true);
 
             } else {
-                FirebaseDatabase.getInstance().getReference().child("users").child(auth.getUid())
-                        .child("following").child(user.getId()).removeValue();
+                FirebaseDatabase.getInstance().getReference()
+                        .child("followings").child(auth.getUid())
+                        .child(user.getId())
+                        .removeValue();
 
-                FirebaseDatabase.getInstance().getReference().child("users").child(user.getId())
-                        .child("followers").child(auth.getUid()).removeValue();
+                FirebaseDatabase.getInstance().getReference()
+                        .child("followers").child(user.getId()).child(auth.getUid())
+                        .removeValue();
             }
         });
 
@@ -107,28 +109,27 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     private void isFollowed(final String id, final TextView btnFollow) {
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
-                .child("users").child(auth.getUid()).child("following");
+        FirebaseDatabase.getInstance().getReference()
+                .child("followings").child(auth.getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.child(id).exists()) {
+                            btnFollow.setText("Following");
+                            btnFollow.setTextColor(mContext.getResources().getColor(R.color.black));
+                            btnFollow.setBackground(mContext.getResources().getDrawable(R.drawable.gray_btn_bg));
+                        } else {
+                            btnFollow.setText("Follow");
+                            btnFollow.setTextColor(mContext.getResources().getColor(R.color.white));
+                            btnFollow.setBackground(mContext.getResources().getDrawable(R.drawable.blue_button_bg));
+                        }
+                    }
 
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(id).exists()) {
-                    btnFollow.setText("Following");
-                    btnFollow.setTextColor(mContext.getResources().getColor(R.color.black));
-                    btnFollow.setBackground(mContext.getResources().getDrawable(R.drawable.gray_btn_bg));
-                } else {
-                    btnFollow.setText("Follow");
-                    btnFollow.setTextColor(mContext.getResources().getColor(R.color.white));
-                    btnFollow.setBackground(mContext.getResources().getDrawable(R.drawable.blue_button_bg));
-                }
-            }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+                    }
+                });
 
     }
 
