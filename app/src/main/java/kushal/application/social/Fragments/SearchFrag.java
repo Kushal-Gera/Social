@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -36,6 +37,7 @@ public class SearchFrag extends Fragment {
     private RecyclerView recyclerViewTags;
     private List<String> mHashTags;
     private TagAdapter tagAdapter;
+    ProgressBar progress_bar;
 
     private SocialAutoCompleteTextView search_bar;
 
@@ -43,6 +45,9 @@ public class SearchFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
+
+        progress_bar = view.findViewById(R.id.progress_bar);
+        progress_bar.setVisibility(View.VISIBLE);
 
         recyclerView = view.findViewById(R.id.recycler_view_users);
         recyclerView.setHasFixedSize(true);
@@ -122,7 +127,9 @@ public class SearchFrag extends Fragment {
                         User user = snapshot.getValue(User.class);
                         mUsers.add(user);
                     }
+
                     searchAdapter.notifyDataSetChanged();
+                    progress_bar.setVisibility(View.GONE);
                 }
             }
 

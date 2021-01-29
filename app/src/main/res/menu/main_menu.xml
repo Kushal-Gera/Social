@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/discover"
-        android:icon="@drawable/ic_baseline_heart"
+        android:icon="@drawable/ic_heart_fill"
         android:title="@string/discover" />
 
     <item

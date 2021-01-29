@@ -6,28 +6,21 @@
     android:orientation="vertical"
     tools:context=".Fragments.HomeFrag">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:indeterminateTint="@color/dark_gray"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="4dp"
+        android:nestedScrollingEnabled="false"
         android:overScrollMode="never" />
 
-    <TextView
-        android:id="@+id/logout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="Log Out"
-        android:textColor="@color/red"
-        android:textSize="22sp"
-        android:textStyle="bold" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_marginBottom="20dp"
-        android:src="@color/gray" />
 
 </LinearLayout>

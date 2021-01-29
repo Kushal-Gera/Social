@@ -33,18 +33,15 @@
                 android:layout_height="40dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="5dp"
-                android:padding="2dp"
                 android:src="@drawable/ic_baseline_person"
-                app:civ_border_color="@color/black"
-                app:civ_border_width="2dp"
                 app:tint="@color/black" />
 
             <TextView
-                android:id="@+id/username"
+                android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="5dp"
+                android:layout_marginStart="10dp"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -53,14 +50,15 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
 
             <ImageView
                 android:id="@+id/post_image"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:contentDescription="@string/description"
-                android:scaleType="fitCenter"
+                android:scaleType="centerCrop"
                 android:src="@drawable/placeholder"
                 app:layout_constraintDimensionRatio="1:1"
                 tools:ignore="MissingConstraints" />
@@ -70,7 +68,10 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp">
 
             <ImageView
                 android:id="@+id/like"
@@ -121,7 +122,8 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:textColor="@color/navy_blue" />
+            android:textColor="@color/black"
+            app:hashtagColor="@color/navy_blue" />
 
         <TextView
             android:id="@+id/no_of_comments"

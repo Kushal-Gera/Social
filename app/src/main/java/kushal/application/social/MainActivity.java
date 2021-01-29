@@ -56,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+        chat.setOnLongClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            return true;
+        });
+
         Query q = ref.child("users").child(auth.getUid());
         q.addValueEventListener(new ValueEventListener() {
             @Override

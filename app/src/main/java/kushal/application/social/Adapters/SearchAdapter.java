@@ -54,8 +54,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         holder.btnFollow.setVisibility(View.VISIBLE);
 
         holder.name.setText(user.getName());
+        holder.user_name.setText(user.getUser_name());
 
-        String url = "https://firebasestorage.googleapis.com/v0/b/social-1ab90.appspot.com/o/posts%2F1611854297138.null?alt=media&token=4c47fa06-4dcb-4149-8ee2-44d15a941f96";
         if (!user.getImage_url().isEmpty())
             Picasso.get().load(user.getImage_url())
                     .placeholder(R.drawable.person_fill).into(holder.imageProfile);
@@ -91,9 +91,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 //                if (isFargment) {
 //                    mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileId", user.getId()).apply();
 //
-////                    ((FragmentActivity) mContext)
-////                            .getSupportFragmentManager().beginTransaction()
-////                            .replace(R.id.con, new ProfileFragment()).commit();
+//                    ((FragmentActivity) mContext)
+//                            .getSupportFragmentManager().beginTransaction()
+//                            .replace(R.id.con, new ProfileFragment()).commit();
 //                }
 //                else {
 //                    Intent intent = new Intent(mContext, MainActivity.class);
@@ -140,13 +140,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public CircleImageView imageProfile;
-        public TextView name, btnFollow;
+        public TextView name, btnFollow, user_name;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             imageProfile = itemView.findViewById(R.id.image_profile);
             name = itemView.findViewById(R.id.name);
+            user_name = itemView.findViewById(R.id.user_name);
             btnFollow = itemView.findViewById(R.id.btn_follow);
         }
     }

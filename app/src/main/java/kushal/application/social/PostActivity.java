@@ -53,7 +53,10 @@ public class PostActivity extends AppCompatActivity {
         post = findViewById(R.id.post);
         description = findViewById(R.id.description);
 
-        close.setOnClickListener(v -> finish());
+        close.setOnClickListener(v -> {
+            startActivity(new Intent(PostActivity.this, MainActivity.class));
+            finish();
+        });
 
         post.setOnClickListener(v -> upload());
 
