@@ -2,6 +2,7 @@ package kushal.application.social;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -32,7 +33,6 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import kushal.application.social.Adapters.CommentAdapter;
 import kushal.application.social.Models.Comment;
-import kushal.application.social.Models.User;
 
 public class CommentActivity extends AppCompatActivity {
 
@@ -47,6 +47,7 @@ public class CommentActivity extends AppCompatActivity {
     ImageView send, post_image, close;
 
     private String post_id;
+    private String profile_img_url = "", user_name_string = "";
     private String user_id;
     private String string_description, post_image_url;
 
@@ -64,7 +65,6 @@ public class CommentActivity extends AppCompatActivity {
         post_image_url = intent.getStringExtra("post_image_url");
 
         recycler_view_comments = findViewById(R.id.recycler_view_comments);
-        recycler_view_comments.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setStackFromEnd(true);
         llm.setReverseLayout(true);
@@ -87,44 +87,17 @@ public class CommentActivity extends AppCompatActivity {
         Picasso.get().load(post_image_url).into(post_image);
         auth = FirebaseAuth.getInstance().getCurrentUser();
 
-        getUserImage();
-
         send.setOnClickListener(v -> {
             if (!TextUtils.isEmpty(addComment.getText().toString()))
                 putComment();
             InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         });
-        close.setOnClickListener(v -> finish());
-
-        getComment();
-        addComment.setOnClickListener(v -> {
-            scrollview.smoothScrollBy(0, 300);
-        });
-    }
-
-    private void getComment() {
-
-        FirebaseDatabase.getInstance().getReference().child("comments")
-                .child(post_id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                commentList.clear();
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Comment comment = snapshot.getValue(Comment.class);
-                    commentList.add(comment);
-                }
-
-                commentAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
+        close.setOnClickListener(v -> {
+            finish();
         });
 
+        new MyTask().execute();
     }
 
     private void putComment() {
@@ -139,6 +112,7 @@ public class CommentActivity extends AppCompatActivity {
         map.put("comment", addComment.getText().toString());
         map.put("user_id", auth.getUid());
         map.put("id", id);
+        map.put("image_url", profile_img_url);
 
         addComment.setText("");
 
@@ -150,27 +124,74 @@ public class CommentActivity extends AppCompatActivity {
 
     }
 
-    private void getUserImage() {
+    public class MyTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(String... strings) {
 
-        FirebaseDatabase.getInstance().getReference()
-                .child("users").child(user_id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                user_name.setText(user.getUser_name());
+//            getUserImage();
+            FirebaseDatabase.getInstance().getReference().child("comments")
+                    .child(post_id).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    commentList.clear();
 
-                if (TextUtils.isEmpty(user.getImage_url())) {
-                    imageProfile.setImageResource(R.drawable.ic_baseline_person);
-                } else {
-                    Picasso.get().load(user.getImage_url()).into(imageProfile);
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Comment comment = snapshot.getValue(Comment.class);
+                        commentList.add(comment);
+                    }
+
+                    commentAdapter.notifyDataSetChanged();
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
 
+//            getComment();
+            FirebaseDatabase.getInstance().getReference().child("comments")
+                    .child(post_id).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    commentList.clear();
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Comment comment = snapshot.getValue(Comment.class);
+                        commentList.add(comment);
+                    }
+
+                    commentAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+            FirebaseDatabase.getInstance().getReference().child("users")
+                    .child(auth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    profile_img_url = snapshot.child("image_url").getValue().toString();
+                    user_name_string = snapshot.child("user_name").getValue().toString();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            user_name.setText(user_name_string);
+            super.onPostExecute(s);
+        }
     }
 }

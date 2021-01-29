@@ -1,5 +1,6 @@
 package kushal.application.social.Fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -68,8 +69,8 @@ public class SearchFrag extends Fragment {
 
         search_bar = view.findViewById(R.id.search_bar);
 
-        readTags();
-        readUsers();
+        MyTask myTask = new MyTask();
+        myTask.execute();
 
         search_bar.addTextChangedListener(new TextWatcher() {
             @Override
@@ -89,56 +90,6 @@ public class SearchFrag extends Fragment {
         });
 
         return view;
-    }
-
-    private void readTags() {
-
-        FirebaseDatabase.getInstance().getReference().child("hashtags")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        mHashTags.clear();
-
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren())
-                            mHashTags.add(snapshot.getKey());
-
-                        tagAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-    }
-
-    private void readUsers() {
-
-        Query q = FirebaseDatabase.getInstance()
-                .getReference().child("users").orderByChild("name");
-
-        q.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (TextUtils.isEmpty(search_bar.getText().toString())) {
-                    mUsers.clear();
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        User user = snapshot.getValue(User.class);
-                        mUsers.add(user);
-                    }
-
-                    searchAdapter.notifyDataSetChanged();
-                    progress_bar.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
     }
 
     private void searchUser(String s) {
@@ -177,4 +128,57 @@ public class SearchFrag extends Fragment {
 
         tagAdapter.filter(mSearchTags);
     }
+
+    public class MyTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+
+//            readTags();
+            FirebaseDatabase.getInstance().getReference().child("hashtags")
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            mHashTags.clear();
+
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                                mHashTags.add(snapshot.getKey());
+
+                            tagAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+//            readUsers();
+            Query q = FirebaseDatabase.getInstance()
+                    .getReference().child("users").orderByChild("name");
+
+            q.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (TextUtils.isEmpty(search_bar.getText().toString())) {
+                        mUsers.clear();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            User user = snapshot.getValue(User.class);
+                            mUsers.add(user);
+                        }
+
+                        searchAdapter.notifyDataSetChanged();
+                        progress_bar.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            return null;
+        }
+    }
+
 }

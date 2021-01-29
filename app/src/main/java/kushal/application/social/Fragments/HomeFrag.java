@@ -1,5 +1,6 @@
 package kushal.application.social.Fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,32 +54,38 @@ public class HomeFrag extends Fragment {
         adapter = new PostAdapter(getContext(), mlist);
         recycler_view.setAdapter(adapter);
 
-        loadData();
+        MyTask myTask = new MyTask();
+        myTask.execute();
+
         return view;
     }
 
-    void loadData() {
-        Query query = FirebaseDatabase.getInstance().getReference().child("posts");
+    public class MyTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            Query query = FirebaseDatabase.getInstance().getReference().child("posts");
 
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mlist.clear();
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    mlist.clear();
 
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Post post = dataSnapshot.getValue(Post.class);
-                    mlist.add(post);
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Post post = dataSnapshot.getValue(Post.class);
+                        mlist.add(post);
+                    }
+
+                    progressBar.setVisibility(View.GONE);
+                    adapter.notifyDataSetChanged();
                 }
 
-                progressBar.setVisibility(View.GONE);
-                adapter.notifyDataSetChanged();
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+                }
+            });
+            return null;
+        }
     }
 
 }

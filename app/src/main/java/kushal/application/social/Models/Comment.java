@@ -5,6 +5,7 @@ public class Comment {
     private String user_id;
     private String id;
     private String comment;
+    private String image_url;
 
 
     public String getId() {
@@ -15,6 +16,13 @@ public class Comment {
         this.id = id;
     }
 
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
 
     public Comment() {
     }

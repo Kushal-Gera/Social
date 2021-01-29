@@ -23,7 +23,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import kushal.application.social.Models.Comment;
-import kushal.application.social.Models.User;
 import kushal.application.social.R;
 
 
@@ -56,21 +55,19 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         holder.comment.setText(comment.getComment());
 
+        if (!TextUtils.isEmpty(comment.getImage_url()))
+            Picasso.get().load(comment.getImage_url()).
+                    placeholder(R.drawable.ic_baseline_person).into(holder.imageProfile);
+
         FirebaseDatabase.getInstance().getReference().child("users")
                 .child(comment.getUser_id()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-
-                holder.user_name.setText(user.getUser_name());
-
-                if (!TextUtils.isEmpty(user.getImage_url()))
-                    Picasso.get().load(user.getImage_url()).into(holder.imageProfile);
+                holder.user_name.setText(dataSnapshot.child("user_name").getValue().toString());
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
