@@ -62,6 +62,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                 .placeholder(R.drawable.person_fill).into(holder.post_image);
         holder.description.setText(post.getDescription());
 
+
         FirebaseDatabase.getInstance().getReference().child("users").child(post.getUser_id())
                 .addValueEventListener(new ValueEventListener() {
                     @Override

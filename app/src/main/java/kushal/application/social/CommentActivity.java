@@ -43,11 +43,11 @@ public class CommentActivity extends AppCompatActivity {
 
     private EditText addComment;
     private CircleImageView imageProfile;
-    private TextView user_name;
+    private TextView user_nameee;
     ImageView send, post_image, close;
 
     private String post_id;
-    private String profile_img_url = "", user_name_string = "";
+    private String profile_img_url = "", my_profile_img;
     private String user_id;
     private String string_description, post_image_url;
 
@@ -80,7 +80,7 @@ public class CommentActivity extends AppCompatActivity {
         close = findViewById(R.id.close);
         post_image = findViewById(R.id.post_image);
         imageProfile = findViewById(R.id.image_profile);
-        user_name = findViewById(R.id.user_name);
+        user_nameee = findViewById(R.id.user_nameee);
         send = findViewById(R.id.send);
 
 
@@ -93,11 +93,11 @@ public class CommentActivity extends AppCompatActivity {
             InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         });
-        close.setOnClickListener(v -> {
-            finish();
-        });
+        close.setOnClickListener(v -> finish());
 
-        new MyTask().execute();
+        MyTask myTask = new MyTask();
+        myTask.execute();
+
     }
 
     private void putComment() {
@@ -112,7 +112,7 @@ public class CommentActivity extends AppCompatActivity {
         map.put("comment", addComment.getText().toString());
         map.put("user_id", auth.getUid());
         map.put("id", id);
-        map.put("image_url", profile_img_url);
+        map.put("image_url", my_profile_img);
 
         addComment.setText("");
 
@@ -172,11 +172,27 @@ public class CommentActivity extends AppCompatActivity {
 
 
             FirebaseDatabase.getInstance().getReference().child("users")
-                    .child(auth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    .child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     profile_img_url = snapshot.child("image_url").getValue().toString();
-                    user_name_string = snapshot.child("user_name").getValue().toString();
+
+                    user_nameee.setText(snapshot.child("user_name").getValue().toString());
+                    if (!TextUtils.isEmpty(profile_img_url))
+                        Picasso.get().load(profile_img_url).into(imageProfile);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            FirebaseDatabase.getInstance().getReference().child("users")
+                    .child(auth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    my_profile_img = snapshot.child("image_url").getValue().toString();
                 }
 
                 @Override
@@ -187,11 +203,7 @@ public class CommentActivity extends AppCompatActivity {
 
             return null;
         }
-
-        @Override
-        protected void onPostExecute(String s) {
-            user_name.setText(user_name_string);
-            super.onPostExecute(s);
-        }
     }
+
+
 }
