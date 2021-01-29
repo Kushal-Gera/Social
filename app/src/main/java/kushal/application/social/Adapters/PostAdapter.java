@@ -81,7 +81,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
 
         isLiked(post.getPost_id(), holder.like);
         noOfLikes(post.getPost_id(), holder.noOfLikes);
-//        getComments(post.getPost_id(), holder.noOfComments);
+        getComments(post.getPost_id(), holder.noOfComments);
         isSaved(post.getPost_id(), holder.save);
 
         holder.like.setOnClickListener(v -> {
@@ -108,7 +108,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         holder.post_image.setOnClickListener(new DoubleClickListener() {
             @Override
             public void onSingleClick(View v) {
-                mcontext.startActivity(new Intent(mcontext, CommentActivity.class));
+                Intent i = new Intent(mcontext, CommentActivity.class);
+                i.putExtra("user_id", post.getUser_id());
+                i.putExtra("post_id", post.getPost_id());
+                i.putExtra("description", post.getDescription());
+                mcontext.startActivity(i);
             }
 
             @Override
@@ -135,14 +139,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             }
         });
 
-        holder.comment.setOnClickListener(v -> {
-            mcontext.startActivity(new Intent(mcontext, CommentActivity.class));
-        });
-        
-        holder.noOfComments.setOnClickListener(v -> {
-            mcontext.startActivity(new Intent(mcontext, CommentActivity.class));
-        });
+        holder.comment.setOnClickListener(v -> holder.post_image.performClick());
 
+        holder.noOfComments.setOnClickListener(v -> holder.post_image.performClick());
+
+    }
+
+    private void getComments(String postId, final TextView text) {
+        FirebaseDatabase.getInstance().getReference().child("comments")
+                .child(postId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                text.setText("View All " + dataSnapshot.getChildrenCount() + " Comments");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void isLiked(String post_id, ImageView like) {
