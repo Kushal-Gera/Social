@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +22,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hendraanggrian.appcompat.widget.SocialTextView;
+import com.pedromassango.doubleclick.DoubleClick;
+import com.pedromassango.doubleclick.DoubleClickListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import kushal.application.social.CommentActivity;
-import kushal.application.social.DoubleClickListener;
 import kushal.application.social.Models.Post;
 import kushal.application.social.R;
 
@@ -105,9 +107,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             }
         });
 
-        holder.post_image.setOnClickListener(new DoubleClickListener() {
+        holder.post_image.setOnClickListener(new DoubleClick(new DoubleClickListener() {
             @Override
-            public void onSingleClick(View v) {
+            public void onSingleClick(View view) {
+
+                Log.i("double click", "no");
                 Intent i = new Intent(mcontext, CommentActivity.class);
                 i.putExtra("user_id", post.getUser_id());
                 i.putExtra("post_id", post.getPost_id());
@@ -117,7 +121,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             }
 
             @Override
-            public void onDoubleClick(View v) {
+            public void onDoubleClick(View view) {
+
+                Log.i("double click", "yes");
                 holder.like_heart.setVisibility(View.VISIBLE);
                 FirebaseDatabase.getInstance().getReference().child("likes")
                         .child(post.getPost_id()).child(auth.getUid()).setValue(true);
@@ -126,7 +132,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
 
                 handler.postDelayed(() -> {
                     holder.like_heart.animate()
-                            .scaleX(0.1f).scaleY(0.1f).alpha(0.4f)
+                            .scaleX(0.01f).scaleY(0.01f).alpha(0.4f)
                             .setDuration(500);
                 }, 200);
 
@@ -136,28 +142,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                             .scaleX(1f).scaleY(1f).alpha(1f)
                             .setDuration(0);
                 }, 750);
-
             }
-        });
+        }));
 
-        holder.comment.setOnClickListener(v -> {
-            Intent i = new Intent(mcontext, CommentActivity.class);
-            i.putExtra("user_id", post.getUser_id());
-            i.putExtra("post_id", post.getPost_id());
-            i.putExtra("description", post.getDescription());
-            i.putExtra("post_image_url", post.getImage_url());
-            mcontext.startActivity(i);
-        });
+        holder.comment.setOnClickListener(v -> holder.post_image.performClick());
 
-        holder.noOfComments.setOnClickListener(v -> {
-            Intent i = new Intent(mcontext, CommentActivity.class);
-            i.putExtra("user_id", post.getUser_id());
-            i.putExtra("post_id", post.getPost_id());
-            i.putExtra("description", post.getDescription());
-            i.putExtra("post_image_url", post.getImage_url());
-            mcontext.startActivity(i);
-
-        });
+        holder.noOfComments.setOnClickListener(v -> holder.post_image.performClick());
     }
 
     private void getComments(String postId, final TextView text) {

@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class CommentActivity extends AppCompatActivity {
     private RecyclerView recycler_view_comments;
     private CommentAdapter commentAdapter;
     private List<Comment> commentList;
+    ScrollView scrollview;
 
     private EditText addComment;
     private CircleImageView imageProfile;
@@ -73,6 +75,7 @@ public class CommentActivity extends AppCompatActivity {
         recycler_view_comments.setAdapter(commentAdapter);
 
 
+        scrollview = findViewById(R.id.scrollview);
         addComment = findViewById(R.id.add_comment);
         close = findViewById(R.id.close);
         post_image = findViewById(R.id.post_image);
@@ -95,6 +98,9 @@ public class CommentActivity extends AppCompatActivity {
         close.setOnClickListener(v -> finish());
 
         getComment();
+        addComment.setOnClickListener(v -> {
+            scrollview.smoothScrollBy(0, 300);
+        });
     }
 
     private void getComment() {
