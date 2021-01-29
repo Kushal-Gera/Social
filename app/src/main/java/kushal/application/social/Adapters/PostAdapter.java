@@ -112,6 +112,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                 i.putExtra("user_id", post.getUser_id());
                 i.putExtra("post_id", post.getPost_id());
                 i.putExtra("description", post.getDescription());
+                i.putExtra("post_image_url", post.getImage_url());
                 mcontext.startActivity(i);
             }
 
@@ -139,10 +140,24 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             }
         });
 
-        holder.comment.setOnClickListener(v -> holder.post_image.performClick());
+        holder.comment.setOnClickListener(v -> {
+            Intent i = new Intent(mcontext, CommentActivity.class);
+            i.putExtra("user_id", post.getUser_id());
+            i.putExtra("post_id", post.getPost_id());
+            i.putExtra("description", post.getDescription());
+            i.putExtra("post_image_url", post.getImage_url());
+            mcontext.startActivity(i);
+        });
 
-        holder.noOfComments.setOnClickListener(v -> holder.post_image.performClick());
+        holder.noOfComments.setOnClickListener(v -> {
+            Intent i = new Intent(mcontext, CommentActivity.class);
+            i.putExtra("user_id", post.getUser_id());
+            i.putExtra("post_id", post.getPost_id());
+            i.putExtra("description", post.getDescription());
+            i.putExtra("post_image_url", post.getImage_url());
+            mcontext.startActivity(i);
 
+        });
     }
 
     private void getComments(String postId, final TextView text) {
@@ -150,7 +165,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                 .child(postId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                text.setText("View All " + dataSnapshot.getChildrenCount() + " Comments");
+                if (dataSnapshot.getChildrenCount() > 0)
+                    text.setText("View All " + dataSnapshot.getChildrenCount() + " Comments");
+                else
+                    text.setVisibility(View.GONE);
             }
 
             @Override

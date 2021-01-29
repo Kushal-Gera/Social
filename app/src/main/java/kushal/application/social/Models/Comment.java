@@ -3,7 +3,18 @@ package kushal.application.social.Models;
 public class Comment {
 
     private String user_id;
+    private String id;
     private String comment;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
 
     public Comment() {
     }
