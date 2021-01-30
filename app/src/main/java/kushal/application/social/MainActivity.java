@@ -66,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
         q.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (TextUtils.isEmpty(snapshot.child("name").getValue().toString())) {
+                if (!snapshot.child("name").exists() ||
+                        TextUtils.isEmpty(snapshot.child("name").getValue().toString())) {
                     Intent i = new Intent(MainActivity.this, EditProfileActivity.class);
                     i.putExtra("first_time", "first_time");
                     startActivity(i);

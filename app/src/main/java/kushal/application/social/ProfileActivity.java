@@ -1,6 +1,7 @@
 package kushal.application.social;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -99,11 +100,13 @@ public class ProfileActivity extends AppCompatActivity {
         options.setOnClickListener(v -> startActivity(new Intent(this, OptionsActivity.class)));
         progress_bar.setVisibility(View.VISIBLE);
 
-        userInfo();
-        getFollowersAndFollowingCount();
-        getPostCount();
+//        userInfo();
+//        getFollowersAndFollowingCount();
+//        getPostCount();
+//
+//        myPhotos();
 
-        myPhotos();
+        new MyTask().execute();
 
         if (user_id.equals(auth.getUid())) {
             editProfile.setText("Edit Profile");
@@ -113,7 +116,6 @@ public class ProfileActivity extends AppCompatActivity {
             checkFollowingStatus();
             savedPictures.setVisibility(View.GONE);
         }
-
 
         recyclerview_mypictures.setVisibility(View.VISIBLE);
         recycler_view_saved.setVisibility(View.GONE);
@@ -197,30 +199,6 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
-    private void myPhotos() {
-
-        FirebaseDatabase.getInstance().getReference().child("users").child(user_id)
-                .child("posts").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                myPhotoList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    myPhotoList.add(snapshot.getValue(Post.class));
-                }
-
-                Collections.reverse(myPhotoList);
-                photoAdapter.notifyDataSetChanged();
-                progress_bar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-
     private void checkFollowingStatus() {
 
         FirebaseDatabase.getInstance().getReference().child("followers")
@@ -246,73 +224,98 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-    private void getPostCount() {
+    public class MyTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(String... strings) {
 
-        FirebaseDatabase.getInstance().getReference().child("users").child(user_id)
-                .child("posts").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                posts.setText("" + dataSnapshot.getChildrenCount());
-            }
+//            userInfo();
+            FirebaseDatabase.getInstance().getReference()
+                    .child("users").child(user_id).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    if (!TextUtils.isEmpty(user.getImage_url()))
+                        Picasso.get().load(user.getImage_url()).into(imageProfile);
+                    username.setText(user.getUser_name());
+                    name.setText(user.getName());
+                    bio.setText(user.getBio());
+                }
 
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                }
+            });
+
+
+//            getFollowersAndFollowingCount();
+            FirebaseDatabase.getInstance().getReference().child("followers").child(user_id)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            followers.setText("" + snapshot.getChildrenCount());
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+            FirebaseDatabase.getInstance().getReference().child("followings").child(user_id)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            following.setText("" + snapshot.getChildrenCount());
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+
+//            getPostCount();
+            FirebaseDatabase.getInstance().getReference().child("users").child(user_id)
+                    .child("posts").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    posts.setText("" + dataSnapshot.getChildrenCount());
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+//            myPhotos();
+            FirebaseDatabase.getInstance().getReference().child("users").child(user_id)
+                    .child("posts").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    myPhotoList.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        myPhotoList.add(snapshot.getValue(Post.class));
+                    }
+
+                    Collections.reverse(myPhotoList);
+                    photoAdapter.notifyDataSetChanged();
+                    progress_bar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+            return null;
+        }
     }
 
-    private void getFollowersAndFollowingCount() {
-
-        FirebaseDatabase.getInstance().getReference().child("followers").child(user_id)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        followers.setText("" + snapshot.getChildrenCount());
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-        FirebaseDatabase.getInstance().getReference().child("followings").child(user_id)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        following.setText("" + snapshot.getChildrenCount());
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-    }
-
-    private void userInfo() {
-
-        FirebaseDatabase.getInstance().getReference()
-                .child("users").child(user_id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-
-                if (!TextUtils.isEmpty(user.getImage_url()))
-                    Picasso.get().load(user.getImage_url()).into(imageProfile);
-                username.setText(user.getUser_name());
-                name.setText(user.getName());
-                bio.setText(user.getBio());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-    }
 }

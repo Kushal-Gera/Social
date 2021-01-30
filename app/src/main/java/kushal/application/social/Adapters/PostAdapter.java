@@ -88,6 +88,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         isSaved(post.getPost_id(), holder.save);
 
         holder.author.setOnClickListener(v -> holder.user_name.performClick());
+        holder.image_profile.setOnClickListener(v -> holder.user_name.performClick());
 
         holder.user_name.setOnClickListener(v -> {
             Intent i = new Intent(mcontext, ProfileActivity.class);

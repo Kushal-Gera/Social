@@ -73,13 +73,15 @@ public class EditProfileActivity extends AppCompatActivity {
                 .child("users").child(auth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                fullname.getEditText().setText(user.getName());
-                username.getEditText().setText(user.getUser_name());
-                bio.getEditText().setText(user.getBio());
-                email.getEditText().setText(user.getEmail());
-                if (!TextUtils.isEmpty(user.getImage_url()))
-                    Picasso.get().load(user.getImage_url()).into(imageProfile);
+                if (dataSnapshot.child("name").exists()) {
+                    User user = dataSnapshot.getValue(User.class);
+                    fullname.getEditText().setText(user.getName());
+                    username.getEditText().setText(user.getUser_name());
+                    bio.getEditText().setText(user.getBio());
+                    email.getEditText().setText(user.getEmail());
+                    if (!TextUtils.isEmpty(user.getImage_url()))
+                        Picasso.get().load(user.getImage_url()).into(imageProfile);
+                }
             }
 
             @Override
