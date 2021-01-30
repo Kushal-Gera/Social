@@ -93,6 +93,13 @@ public class CommentActivity extends AppCompatActivity {
             InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         });
+
+        user_nameee.setOnClickListener(v->{
+            Intent i = new Intent(CommentActivity.this, ProfileActivity.class);
+            i.putExtra("user_id", user_id);
+            startActivity(i);
+        });
+
         close.setOnClickListener(v -> finish());
 
         MyTask myTask = new MyTask();

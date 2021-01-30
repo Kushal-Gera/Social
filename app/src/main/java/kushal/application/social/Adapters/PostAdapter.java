@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,7 @@ import java.util.ArrayList;
 
 import kushal.application.social.CommentActivity;
 import kushal.application.social.Models.Post;
+import kushal.application.social.ProfileActivity;
 import kushal.application.social.R;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
@@ -87,6 +87,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         getComments(post.getPost_id(), holder.noOfComments);
         isSaved(post.getPost_id(), holder.save);
 
+        holder.author.setOnClickListener(v -> holder.user_name.performClick());
+
+        holder.user_name.setOnClickListener(v -> {
+            Intent i = new Intent(mcontext, ProfileActivity.class);
+            i.putExtra("user_id", post.getUser_id());
+            mcontext.startActivity(i);
+        });
+
         holder.like.setOnClickListener(v -> {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
                     .child("likes").child(post.getPost_id());
@@ -112,7 +120,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             @Override
             public void onSingleClick(View view) {
 
-                Log.i("double click", "no");
                 Intent i = new Intent(mcontext, CommentActivity.class);
                 i.putExtra("user_id", post.getUser_id());
                 i.putExtra("post_id", post.getPost_id());
@@ -124,7 +131,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             @Override
             public void onDoubleClick(View view) {
 
-                Log.i("double click", "yes");
                 holder.like_heart.setVisibility(View.VISIBLE);
                 FirebaseDatabase.getInstance().getReference().child("likes")
                         .child(post.getPost_id()).child(auth.getUid()).setValue(true);
@@ -156,8 +162,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                 .child(postId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount() > 0)
+                if (dataSnapshot.getChildrenCount() > 1)
                     text.setText("View All " + dataSnapshot.getChildrenCount() + " Comments");
+                else if (dataSnapshot.getChildrenCount() == 1)
+                    text.setText("View " + dataSnapshot.getChildrenCount() + " Comment");
                 else
                     text.setVisibility(View.GONE);
             }

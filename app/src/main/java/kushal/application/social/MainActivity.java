@@ -23,7 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import kushal.application.social.Fragments.DiscoverFrag;
 import kushal.application.social.Fragments.HomeFrag;
-import kushal.application.social.Fragments.ProfileFrag;
 import kushal.application.social.Fragments.SearchFrag;
 
 public class MainActivity extends AppCompatActivity {
@@ -114,13 +113,15 @@ public class MainActivity extends AppCompatActivity {
                     PRE_SELECTED_ID = bottom_navbar.getSelectedItemId();
                     startActivity(new Intent(MainActivity.this, PostActivity.class));
                     break;
+                case R.id.profile:
+                    PRE_SELECTED_ID = bottom_navbar.getSelectedItemId();
+                    Intent i = new Intent(MainActivity.this, ProfileActivity.class);
+                    i.putExtra("user_id", auth.getUid());
+                    startActivity(i);
+                    break;
                 case R.id.discover:
                     AT_HOME = false;
                     frag = new DiscoverFrag();
-                    break;
-                case R.id.profile:
-                    AT_HOME = false;
-                    frag = new ProfileFrag();
                     break;
                 default:
                     break;
@@ -137,12 +138,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (bottom_navbar.getSelectedItemId() == R.id.post) {
+        if (bottom_navbar.getSelectedItemId() == R.id.post || bottom_navbar.getSelectedItemId() == R.id.profile) {
             if (PRE_SELECTED_ID != 0)
                 bottom_navbar.setSelectedItemId(PRE_SELECTED_ID);
             else
                 bottom_navbar.setSelectedItemId(R.id.homepage);
-
         }
     }
 

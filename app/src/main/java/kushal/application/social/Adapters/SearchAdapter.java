@@ -1,6 +1,7 @@
 package kushal.application.social.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import kushal.application.social.Models.User;
+import kushal.application.social.ProfileActivity;
 import kushal.application.social.R;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
@@ -75,7 +77,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         .child("followers").child(user.getId()).child(auth.getUid())
                         .setValue(true);
 
-            } else {
+            }
+            else {
                 FirebaseDatabase.getInstance().getReference()
                         .child("followings").child(auth.getUid())
                         .child(user.getId())
@@ -87,24 +90,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             }
         });
 
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (isFargment) {
-//                    mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileId", user.getId()).apply();
-//
-//                    ((FragmentActivity) mContext)
-//                            .getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.con, new ProfileFragment()).commit();
-//                }
-//                else {
-//                    Intent intent = new Intent(mContext, MainActivity.class);
-//                    intent.putExtra("publisherId", user.getId());
-//                    mContext.startActivity(intent);
-//                }
-//            }
-//        });
+        holder.itemView.setOnClickListener(v -> {
+            Intent i = new Intent(mContext, ProfileActivity.class);
+            i.putExtra("user_id", user.getId());
+            mContext.startActivity(i);
+        });
 
+        holder.name.setOnClickListener(v -> holder.itemView.performClick());
+
+        holder.user_name.setOnClickListener(v -> holder.itemView.performClick());
     }
 
     private void isFollowed(final String id, final TextView btnFollow) {
