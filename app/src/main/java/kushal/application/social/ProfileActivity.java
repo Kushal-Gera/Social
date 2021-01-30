@@ -1,5 +1,6 @@
 package kushal.application.social;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -48,7 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView username;
 
     private ImageView myPictures, close;
-    private ImageView savedPictures;
+    private ImageView savedPictures, options;
 
     private TextView editProfile;
     ProgressBar progress_bar;
@@ -76,6 +77,7 @@ public class ProfileActivity extends AppCompatActivity {
         savedPictures = findViewById(R.id.saved_pictures);
         editProfile = findViewById(R.id.edit_profile);
         progress_bar = findViewById(R.id.progress_bar);
+        options = findViewById(R.id.options);
 
 
         recyclerview_mypictures = findViewById(R.id.recyclerview_mypictures);
@@ -94,6 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         close.setOnClickListener(v -> finish());
+        options.setOnClickListener(v -> startActivity(new Intent(this, OptionsActivity.class)));
         progress_bar.setVisibility(View.VISIBLE);
 
         userInfo();
@@ -105,6 +108,7 @@ public class ProfileActivity extends AppCompatActivity {
         if (user_id.equals(auth.getUid())) {
             editProfile.setText("Edit Profile");
             getSavedPosts();
+            options.setVisibility(View.VISIBLE);
         } else {
             checkFollowingStatus();
             savedPictures.setVisibility(View.GONE);
@@ -134,7 +138,7 @@ public class ProfileActivity extends AppCompatActivity {
             String btnText = editProfile.getText().toString();
 
             if (btnText.equals("Edit Profile")) {
-//                startActivity(new Intent(this, EditProfileActivity.class));
+                startActivity(new Intent(this, EditProfileActivity.class));
             } else {
                 if (btnText.equals("Follow")) {
                     FirebaseDatabase.getInstance().getReference()
@@ -145,27 +149,12 @@ public class ProfileActivity extends AppCompatActivity {
                             .child("followers").child(user_id).child(auth.getUid())
                             .setValue(true);
                 } else {
-//                    Intent i = new Intent(this, ChatActivity.class);
-//                    i.putExtra("user_id", user_id);
-//                    startActivity(i);
+                    Intent i = new Intent(this, ChatActivity.class);
+                    i.putExtra("user_id", user_id);
+                    startActivity(i);
                 }
             }
         });
-
-//        followers.setOnClickListener(v -> {
-//            Intent intent = new Intent(this, FollowersActivity.class);
-//            intent.putExtra("id", profileId);
-//            intent.putExtra("title", "followers");
-//            startActivity(intent);
-//        });
-//
-//        following.setOnClickListener(v -> {
-//            Intent intent = new Intent(this, FollowersActivity.class);
-//            intent.putExtra("id", profileId);
-//            intent.putExtra("title", "followings");
-//            startActivity(intent);
-//        });
-
 
     }
 

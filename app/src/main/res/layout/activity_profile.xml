@@ -53,7 +53,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/update"
+                    android:src="@drawable/ic_outline_change_circle_24"
                     android:visibility="invisible" />
 
             </RelativeLayout>

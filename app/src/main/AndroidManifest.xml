@@ -15,7 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Social"
         android:windowSoftInputMode="adjustPan|stateVisible">
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".OptionsActivity"></activity>
+        <activity android:name=".ChatActivity" />
+        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".ProfileActivity" />
         <activity android:name=".CommentActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"

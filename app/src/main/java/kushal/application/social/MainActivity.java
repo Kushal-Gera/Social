@@ -3,9 +3,9 @@ package kushal.application.social;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,24 +57,19 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        chat.setOnLongClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
 
-            Intent i = new Intent(MainActivity.this, LoginActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
-            finish();
-
-            return true;
+        chat.setOnClickListener(v -> {
+            startActivity(new Intent(this, ChatActivity.class));
         });
 
         Query q = ref.child("users").child(auth.getUid());
         q.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!snapshot.child("name").exists()) {
-//                    startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-                    Toast.makeText(getApplicationContext(), "Name not Found", Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(snapshot.child("name").getValue().toString())) {
+                    Intent i = new Intent(MainActivity.this, EditProfileActivity.class);
+                    i.putExtra("first_time", "first_time");
+                    startActivity(i);
                 }
             }
 

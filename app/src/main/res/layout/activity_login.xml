@@ -35,7 +35,6 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp">
 
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/phone"
             android:layout_width="match_parent"
@@ -52,7 +51,7 @@
             app:boxCornerRadiusBottomStart="10dp"
             app:boxCornerRadiusTopEnd="10dp"
             app:boxCornerRadiusTopStart="10dp"
-            app:startIconDrawable="@drawable/otp"
+            app:startIconDrawable="@drawable/call"
             app:startIconTint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
