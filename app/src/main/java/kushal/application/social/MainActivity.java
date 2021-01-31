@@ -1,7 +1,6 @@
 package kushal.application.social;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -84,9 +83,6 @@ public class MainActivity extends AppCompatActivity {
         setBottomNavBar();
         AT_HOME = true;
         getSupportFragmentManager().beginTransaction().replace(container.getId(), new HomeFrag()).commit();
-
-        getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
-                .edit().putLong("notification_count", 0).apply();
 
         FirebaseDatabase.getInstance().getReference()
                 .child("notifications").addValueEventListener(new ValueEventListener() {
