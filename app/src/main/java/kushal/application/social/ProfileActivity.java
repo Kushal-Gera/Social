@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -100,11 +101,6 @@ public class ProfileActivity extends AppCompatActivity {
         options.setOnClickListener(v -> startActivity(new Intent(this, OptionsActivity.class)));
         progress_bar.setVisibility(View.VISIBLE);
 
-//        userInfo();
-//        getFollowersAndFollowingCount();
-//        getPostCount();
-//
-//        myPhotos();
 
         new MyTask().execute();
 
@@ -150,6 +146,8 @@ public class ProfileActivity extends AppCompatActivity {
                     FirebaseDatabase.getInstance().getReference()
                             .child("followers").child(user_id).child(auth.getUid())
                             .setValue(true);
+
+                    addNoti("", user_id, "Started following you", false);
                 } else {
                     Intent i = new Intent(this, ChatActivity.class);
                     i.putExtra("user_id", user_id);
@@ -158,6 +156,18 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void addNoti(String post_id, String user_id, String text, Boolean isPost) {
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("post_id", post_id);
+        map.put("user_id", auth.getUid());
+        map.put("text", text);
+        map.put("is_post", isPost);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("notifications").child(user_id).push().setValue(map);
     }
 
     private void getSavedPosts() {
@@ -184,6 +194,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 }
 
                                 postAdapterSaved.notifyDataSetChanged();
+                                Collections.reverse(mySavedList);
                                 progress_bar.setVisibility(View.GONE);
                             }
 
@@ -251,7 +262,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 //            getFollowersAndFollowingCount();
             FirebaseDatabase.getInstance().getReference().child("followers").child(user_id)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                    .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             followers.setText("" + snapshot.getChildrenCount());
@@ -264,7 +275,7 @@ public class ProfileActivity extends AppCompatActivity {
                     });
 
             FirebaseDatabase.getInstance().getReference().child("followings").child(user_id)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                    .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             following.setText("" + snapshot.getChildrenCount());
@@ -279,7 +290,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 //            getPostCount();
             FirebaseDatabase.getInstance().getReference().child("users").child(user_id)
-                    .child("posts").addListenerForSingleValueEvent(new ValueEventListener() {
+                    .child("posts").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     posts.setText("" + dataSnapshot.getChildrenCount());

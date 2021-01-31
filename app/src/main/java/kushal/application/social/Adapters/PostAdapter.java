@@ -26,6 +26,7 @@ import com.pedromassango.doubleclick.DoubleClickListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import kushal.application.social.CommentActivity;
 import kushal.application.social.Models.Post;
@@ -102,6 +103,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
 
             if (holder.like.getTag().toString().equals("Liked")) {
                 ref.child(auth.getUid()).setValue(true);
+
+                addNoti(post.getPost_id(), post.getUser_id(), "Liked your post", true);
             } else {
                 ref.child(auth.getUid()).removeValue();
             }
@@ -111,7 +114,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             if (v.getTag().equals("Saved")) {
                 FirebaseDatabase.getInstance().getReference()
                         .child("saved").child(auth.getUid()).child(post.getPost_id()).setValue(true);
-            } else {
+            }
+            else {
                 FirebaseDatabase.getInstance().getReference()
                         .child("saved").child(auth.getUid()).child(post.getPost_id()).removeValue();
             }
@@ -136,8 +140,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                 FirebaseDatabase.getInstance().getReference().child("likes")
                         .child(post.getPost_id()).child(auth.getUid()).setValue(true);
 
-                Handler handler = new Handler();
+                addNoti(post.getPost_id(), post.getUser_id(), "Liked your post", true);
 
+                Handler handler = new Handler();
                 handler.postDelayed(() -> {
                     holder.like_heart.animate()
                             .scaleX(0.01f).scaleY(0.01f).alpha(0.4f)
@@ -156,6 +161,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         holder.comment.setOnClickListener(v -> holder.post_image.performClick());
 
         holder.noOfComments.setOnClickListener(v -> holder.post_image.performClick());
+    }
+
+    private void addNoti(String post_id, String user_id, String text, Boolean isPost) {
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("post_id", post_id);
+        map.put("user_id", auth.getUid());
+        map.put("text", text);
+        map.put("is_post", isPost);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("notifications").child(user_id).push().setValue(map);
     }
 
     private void getComments(String postId, final TextView text) {

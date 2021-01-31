@@ -18,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -77,6 +78,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         .child("followers").child(user.getId()).child(auth.getUid())
                         .setValue(true);
 
+                addNoti("", user.getId(), "Started following you", false);
             }
             else {
                 FirebaseDatabase.getInstance().getReference()
@@ -99,6 +101,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         holder.name.setOnClickListener(v -> holder.itemView.performClick());
 
         holder.user_name.setOnClickListener(v -> holder.itemView.performClick());
+    }
+
+    private void addNoti(String post_id, String user_id, String text, Boolean isPost) {
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("post_id", post_id);
+        map.put("user_id", auth.getUid());
+        map.put("text", text);
+        map.put("is_post", isPost);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("notifications").child(user_id).push().setValue(map);
     }
 
     private void isFollowed(final String id, final TextView btnFollow) {

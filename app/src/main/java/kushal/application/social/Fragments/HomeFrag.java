@@ -1,10 +1,13 @@
 package kushal.application.social.Fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -23,7 +26,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import kushal.application.social.Adapters.PostAdapter;
+import kushal.application.social.ChatActivity;
+import kushal.application.social.MainActivity;
 import kushal.application.social.Models.Post;
+import kushal.application.social.PostActivity;
 import kushal.application.social.R;
 
 public class HomeFrag extends Fragment {
@@ -34,12 +40,19 @@ public class HomeFrag extends Fragment {
     PostAdapter adapter;
     ProgressBar progressBar;
 
+    ImageView post_now;
+    FrameLayout chat;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         auth = FirebaseAuth.getInstance().getCurrentUser();
+
+        post_now = view.findViewById(R.id.post_now);
+        chat = view.findViewById(R.id.chat);
 
         progressBar = view.findViewById(R.id.progressBar);
         recycler_view = view.findViewById(R.id.recycler_view);
@@ -53,6 +66,16 @@ public class HomeFrag extends Fragment {
 
         adapter = new PostAdapter(getContext(), mlist);
         recycler_view.setAdapter(adapter);
+
+
+        post_now.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), PostActivity.class));
+        });
+
+        chat.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), ChatActivity.class));
+        });
+
 
         MyTask myTask = new MyTask();
         myTask.execute();

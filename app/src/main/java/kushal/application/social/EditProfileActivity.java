@@ -102,9 +102,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
         save.setOnClickListener(v -> {
             if (TextUtils.isEmpty(fullname.getEditText().getText()))
-                fullname.setError("Name required");
+                fullname.getEditText().setError("Name required");
             else if (TextUtils.isEmpty(username.getEditText().getText()))
-                username.setError("Username required");
+                username.getEditText().setError("Username required");
             else updateProfile();
         });
     }
@@ -116,6 +116,7 @@ public class EditProfileActivity extends AppCompatActivity {
         map.put("name", fullname.getEditText().getText().toString());
         map.put("user_name", username.getEditText().getText().toString());
         map.put("email", email.getEditText().getText().toString());
+        map.put("id", auth.getUid());
         map.put("bio", bio.getEditText().getText().toString());
 
         FirebaseDatabase.getInstance().getReference()

@@ -1,11 +1,13 @@
 package kushal.application.social;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private Boolean AT_HOME = true;
     int PRE_SELECTED_ID = 0;
 
-    ImageView post_now;
-    FrameLayout chat;
+    TextView notify_home, notify_search, notify_post, notify_discover, notify_profile;
+    private static String SHARED_PREF = "shared_pref";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +47,11 @@ public class MainActivity extends AppCompatActivity {
         container = findViewById(R.id.container);
         bottom_navbar = findViewById(R.id.bottom_navbar);
 
-        post_now = findViewById(R.id.post_now);
-        chat = findViewById(R.id.chat);
+        notify_home = findViewById(R.id.notify_home);
+        notify_search = findViewById(R.id.notify_search);
+        notify_post = findViewById(R.id.notify_post);
+        notify_discover = findViewById(R.id.notify_discover);
+        notify_profile = findViewById(R.id.notify_profile);
 
         auth = FirebaseAuth.getInstance().getCurrentUser();
         ref = FirebaseDatabase.getInstance().getReference();
@@ -57,10 +62,6 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-
-        chat.setOnClickListener(v -> {
-            startActivity(new Intent(this, ChatActivity.class));
-        });
 
         Query q = ref.child("users").child(auth.getUid());
         q.addValueEventListener(new ValueEventListener() {
@@ -84,9 +85,31 @@ public class MainActivity extends AppCompatActivity {
         AT_HOME = true;
         getSupportFragmentManager().beginTransaction().replace(container.getId(), new HomeFrag()).commit();
 
-        post_now.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, PostActivity.class));
+        getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
+                .edit().putLong("notification_count", 0).apply();
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("notifications").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                long saved_count = getSharedPreferences(SHARED_PREF, MODE_PRIVATE)
+                        .getLong("notification_count", 0);
+
+                if (snapshot.child(auth.getUid()).exists() &&
+                        snapshot.child(auth.getUid()).getChildrenCount() != saved_count) {
+
+                    long diff = snapshot.child(auth.getUid()).getChildrenCount() - saved_count;
+                    notify_discover.setVisibility(View.VISIBLE);
+                    notify_discover.setText("" + diff);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
         });
+
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -117,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.discover:
                     AT_HOME = false;
+                    notify_discover.setVisibility(View.INVISIBLE);
                     frag = new DiscoverFrag();
                     break;
                 default:

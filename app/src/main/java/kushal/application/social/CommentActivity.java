@@ -124,11 +124,25 @@ public class CommentActivity extends AppCompatActivity {
         addComment.setText("");
 
         ref.child(id).setValue(map).addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
+            if (task.isSuccessful()) {
+                addNoti(post_id, user_id, "Commented on your post", true);
+            }else{
                 Toast.makeText(CommentActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
+    }
+
+    private void addNoti(String post_id, String user_id, String text, Boolean isPost) {
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("post_id", post_id);
+        map.put("user_id", auth.getUid());
+        map.put("text", text);
+        map.put("is_post", isPost);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("notifications").child(user_id).push().setValue(map);
     }
 
     public class MyTask extends AsyncTask<String, Integer, String> {

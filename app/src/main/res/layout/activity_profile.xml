@@ -118,14 +118,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
+                                android:textSize="18dp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="POSTS"
-                                android:textSize="12sp" />
+                                android:textSize="10dp" />
 
                         </LinearLayout>
 
@@ -141,14 +141,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
+                                android:textSize="18dp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="FOLLOWERS"
-                                android:textSize="12sp" />
+                                android:textSize="10dp" />
 
                         </LinearLayout>
 
@@ -164,14 +164,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
+                                android:textSize="18dp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="FOLLOWING"
-                                android:textSize="12sp" />
+                                android:textSize="10dp" />
 
                         </LinearLayout>
 

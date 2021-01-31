@@ -45,7 +45,7 @@
                         android:layout_toStartOf="@id/post"
                         android:layout_toEndOf="@id/close"
                         android:gravity="center"
-                        android:text="Comment"
+                        android:text="Comments"
                         android:textColor="@color/black"
                         android:textSize="22sp"
                         android:textStyle="bold" />
