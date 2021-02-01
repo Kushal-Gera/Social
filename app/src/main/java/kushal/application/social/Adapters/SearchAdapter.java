@@ -2,6 +2,7 @@ package kushal.application.social.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +58,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         holder.name.setText(user.getName());
         holder.user_name.setText(user.getUser_name());
 
-        if (user.getImage_url().isEmpty())
+        if (TextUtils.isEmpty(user.getImage_url()))
             holder.imageProfile.setImageResource(R.drawable.ic_baseline_person);
         else
             Picasso.get().load(user.getImage_url()).into(holder.imageProfile);
@@ -104,6 +105,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     }
 
     private void addNoti(String post_id, String user_id, String text, Boolean isPost) {
+        if (auth.getUid().equals(user_id)) return;
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("post_id", post_id);

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +42,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private TextView save;
     private ImageView changePhoto;
     private TextInputLayout fullname, username, email, bio;
-    String new_img_url;
+    String new_img_url = "";
 
     private FirebaseUser auth;
 
@@ -119,9 +120,10 @@ public class EditProfileActivity extends AppCompatActivity {
         map.put("email", email.getEditText().getText().toString());
         map.put("id", auth.getUid());
         map.put("bio", bio.getEditText().getText().toString());
-        if("first_time".equals(first_time) || !TextUtils.isEmpty(new_img_url))
+        if (("first_time").equals(first_time) || (!TextUtils.isEmpty(new_img_url)))
             map.put("image_url", new_img_url);
 
+        Log.i("first_time", "new_img_url = " + new_img_url + ",  first_time = " + first_time);
 
         FirebaseDatabase.getInstance().getReference()
                 .child("users").child(auth.getUid())

@@ -47,7 +47,7 @@ public class CommentActivity extends AppCompatActivity {
     ImageView send, post_image, close;
 
     private String post_id;
-    private String profile_img_url = "", my_profile_img;
+    private String profile_img_url, my_profile_img;
     private String user_id;
     private String string_description, post_image_url;
 
@@ -94,7 +94,7 @@ public class CommentActivity extends AppCompatActivity {
             inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         });
 
-        user_nameee.setOnClickListener(v->{
+        user_nameee.setOnClickListener(v -> {
             Intent i = new Intent(CommentActivity.this, ProfileActivity.class);
             i.putExtra("user_id", user_id);
             startActivity(i);
@@ -126,7 +126,7 @@ public class CommentActivity extends AppCompatActivity {
         ref.child(id).setValue(map).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 addNoti(post_id, user_id, "Commented on your post", true);
-            }else{
+            } else {
                 Toast.makeText(CommentActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -134,6 +134,8 @@ public class CommentActivity extends AppCompatActivity {
     }
 
     private void addNoti(String post_id, String user_id, String text, Boolean isPost) {
+
+        if (auth.getUid().equals(user_id)) return;
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("post_id", post_id);
@@ -196,7 +198,8 @@ public class CommentActivity extends AppCompatActivity {
                     .child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    profile_img_url = snapshot.child("image_url").getValue().toString();
+                    if (snapshot.child("image_url").exists())
+                        profile_img_url = snapshot.child("image_url").getValue().toString();
 
                     user_nameee.setText(snapshot.child("user_name").getValue().toString());
                     if (!TextUtils.isEmpty(profile_img_url))
@@ -213,7 +216,8 @@ public class CommentActivity extends AppCompatActivity {
                     .child(auth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    my_profile_img = snapshot.child("image_url").getValue().toString();
+                    if (snapshot.child("image_url").exists())
+                        my_profile_img = snapshot.child("image_url").getValue().toString();
                 }
 
                 @Override

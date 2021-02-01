@@ -108,6 +108,16 @@
                 android:src="@drawable/ic_chat" />
 
             <ImageView
+                android:id="@+id/share"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/comment"
+                android:contentDescription="@string/description"
+                android:src="@drawable/share"
+                android:visibility="invisible" />
+
+            <ImageView
                 android:id="@+id/save"
                 android:layout_width="30dp"
                 android:layout_height="30dp"

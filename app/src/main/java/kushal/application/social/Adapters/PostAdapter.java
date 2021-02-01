@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +71,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                         holder.author.setText(snapshot.child("name").getValue().toString());
                         holder.user_name.setText(snapshot.child("user_name").getValue().toString());
 
-                        if (snapshot.child("image_url").getValue().toString().isEmpty())
+                        if (TextUtils.isEmpty(snapshot.child("image_url").getValue().toString()))
                             holder.image_profile.setImageResource(R.drawable.ic_baseline_person);
                         else
                             Picasso.get().load(snapshot.child("image_url")
@@ -84,7 +85,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                     }
                 });
 
-        isLiked(post.getPost_id(), holder.like);
+        isLiked(post.getPost_id(), holder.like, holder.share);
         noOfLikes(post.getPost_id(), holder.noOfLikes);
         getComments(post.getPost_id(), holder.noOfComments);
         isSaved(post.getPost_id(), holder.save);
@@ -97,6 +98,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             i.putExtra("user_id", post.getUser_id());
             mcontext.startActivity(i);
         });
+
+        holder.share.setOnClickListener(v -> shareURL(post.getImage_url()));
 
         holder.like.setOnClickListener(v -> {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
@@ -167,7 +170,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         holder.noOfComments.setOnClickListener(v -> holder.post_image.performClick());
     }
 
+    private void shareURL(String url) {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, "Take a look:\n" + url + "\n\nShared via Social");
+        mcontext.startActivity(Intent.createChooser(sharingIntent, "Share via"));
+
+    }
+
     private void addNoti(String post_id, String user_id, String text, Boolean isPost) {
+        if (auth.getUid().equals(user_id)) return;
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("post_id", post_id);
@@ -199,7 +211,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         });
     }
 
-    private void isLiked(String post_id, ImageView like) {
+    private void isLiked(String post_id, ImageView like, ImageView share) {
         FirebaseDatabase.getInstance().getReference()
                 .child("likes").child(post_id)
                 .addValueEventListener(new ValueEventListener() {
@@ -207,9 +219,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.child(auth.getUid()).exists()) {
                             like.setImageResource(R.drawable.ic_heart_fill);
+                            share.setVisibility(View.VISIBLE);
                             like.setTag("Like");
                         } else {
                             like.setTag("Liked");
+                            share.setVisibility(View.INVISIBLE);
                             like.setImageResource(R.drawable.heart_plain);
                         }
                     }
@@ -271,7 +285,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         public ImageView post_image;
         public ImageView like;
         public ImageView comment;
-        public ImageView save;
+        public ImageView save, share;
         public ImageView more, like_heart;
 
         public TextView user_name;
@@ -290,6 +304,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             save = itemView.findViewById(R.id.save);
             more = itemView.findViewById(R.id.more);
             like_heart = itemView.findViewById(R.id.like_heart);
+            share = itemView.findViewById(R.id.share);
 
             user_name = itemView.findViewById(R.id.user_name);
             noOfLikes = itemView.findViewById(R.id.no_of_likes);

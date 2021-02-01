@@ -160,6 +160,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void addNoti(String post_id, String user_id, String text, Boolean isPost) {
+        if (auth.getUid().equals(user_id)) return;
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("post_id", post_id);
