@@ -85,7 +85,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Post post = dataSnapshot.getValue(Post.class);
-                Picasso.get().load(post.getImage_url()).placeholder(R.drawable.placeholder).into(imageView);
+                Picasso.get().load(post.getImage_url()).fit().centerCrop()
+                        .placeholder(R.drawable.placeholder).into(imageView);
 
                 imageView.setOnClickListener(v -> {
                     Intent i = new Intent(mContext, CommentActivity.class);

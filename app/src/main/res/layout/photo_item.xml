@@ -14,8 +14,7 @@
             android:id="@+id/post_image"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:contentDescription="@string/description"
-            android:scaleType="centerCrop" />
+            android:contentDescription="@string/description" />
 
     </androidx.cardview.widget.CardView>
 

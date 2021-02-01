@@ -87,6 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
         recyclerview_mypictures.setLayoutManager(new GridLayoutManager(this, 3));
         myPhotoList = new ArrayList<>();
         photoAdapter = new PhotoAdapter(this, myPhotoList);
+        photoAdapter.setHasStableIds(true);
         recyclerview_mypictures.setAdapter(photoAdapter);
 
         recycler_view_saved = findViewById(R.id.recycler_view_saved);
@@ -175,7 +176,7 @@ public class ProfileActivity extends AppCompatActivity {
         final List<String> savedIds = new ArrayList<>();
 
         FirebaseDatabase.getInstance().getReference().child("saved").child(auth.getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot datasnapshot) {
 

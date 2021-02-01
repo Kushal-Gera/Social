@@ -57,9 +57,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         holder.comment.setText(comment.getComment());
 
-        if (!TextUtils.isEmpty(comment.getImage_url()))
-            Picasso.get().load(comment.getImage_url()).
-                    placeholder(R.drawable.ic_baseline_person).into(holder.imageProfile);
+        if (TextUtils.isEmpty(comment.getImage_url()))
+            holder.imageProfile.setImageResource(R.drawable.ic_baseline_person);
+        else Picasso.get().load(comment.getImage_url()).into(holder.imageProfile);
 
         FirebaseDatabase.getInstance().getReference().child("users")
                 .child(comment.getUser_id()).addValueEventListener(new ValueEventListener() {

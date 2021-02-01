@@ -41,6 +41,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private TextView save;
     private ImageView changePhoto;
     private TextInputLayout fullname, username, email, bio;
+    String new_img_url;
 
     private FirebaseUser auth;
 
@@ -118,16 +119,21 @@ public class EditProfileActivity extends AppCompatActivity {
         map.put("email", email.getEditText().getText().toString());
         map.put("id", auth.getUid());
         map.put("bio", bio.getEditText().getText().toString());
+        if("first_time".equals(first_time) || !TextUtils.isEmpty(new_img_url))
+            map.put("image_url", new_img_url);
+
 
         FirebaseDatabase.getInstance().getReference()
                 .child("users").child(auth.getUid())
                 .updateChildren(map).addOnCompleteListener(task -> finish());
+
     }
 
     private void uploadImage() {
         final ProgressDialog pd = new ProgressDialog(this, R.style.progress_dialog_theme);
-        pd.setTitle("Uploading");
+        pd.setTitle("Uploading Image");
         pd.setMessage("Please wait...");
+        pd.setCancelable(false);
         pd.show();
 
         if (mImageUri != null) {
@@ -145,11 +151,11 @@ public class EditProfileActivity extends AppCompatActivity {
                     Uri downloadUri = task.getResult();
                     String url = downloadUri.toString();
 
-                    FirebaseDatabase.getInstance().getReference().child("users")
-                            .child(auth.getUid()).child("image_url").setValue(url);
+                    new_img_url = url;
+                    Picasso.get().load(url).into(imageProfile);
                     pd.dismiss();
                 } else {
-                    Toast.makeText(EditProfileActivity.this, "Upload failed!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditProfileActivity.this, "Image upload failed!", Toast.LENGTH_SHORT).show();
                 }
             });
         } else {

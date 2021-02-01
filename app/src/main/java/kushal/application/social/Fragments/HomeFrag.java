@@ -67,7 +67,6 @@ public class HomeFrag extends Fragment {
         adapter = new PostAdapter(getContext(), mlist);
         recycler_view.setAdapter(adapter);
 
-
         post_now.setOnClickListener(v -> {
             startActivity(new Intent(getContext(), PostActivity.class));
         });

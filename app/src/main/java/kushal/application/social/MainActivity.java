@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     TextView notify_home, notify_search, notify_post, notify_discover, notify_profile;
     private static String SHARED_PREF = "shared_pref";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

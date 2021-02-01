@@ -2,9 +2,11 @@ package kushal.application.social;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -51,7 +53,6 @@ public class LoginActivity extends AppCompatActivity {
         login = findViewById(R.id.login_btn);
         linearLayout = findViewById(R.id.linearLayout);
         progressBar = findViewById(R.id.progressBar);
-
 
         next.setOnClickListener(v -> {
             String number = phone.getEditText().getText().toString().trim();

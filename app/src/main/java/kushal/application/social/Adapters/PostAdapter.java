@@ -59,10 +59,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
 
         Post post = mlist.get(position);
 
-        Picasso.get().load(post.getImage_url())
-                .placeholder(R.drawable.person_fill).into(holder.post_image);
+        Picasso.get().load(post.getImage_url()).fit().centerCrop()
+                .placeholder(R.drawable.placeholder).into(holder.post_image);
         holder.description.setText(post.getDescription());
-
 
         FirebaseDatabase.getInstance().getReference().child("users").child(post.getUser_id())
                 .addValueEventListener(new ValueEventListener() {
@@ -71,9 +70,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                         holder.author.setText(snapshot.child("name").getValue().toString());
                         holder.user_name.setText(snapshot.child("user_name").getValue().toString());
 
-                        if (!snapshot.child("image_url").getValue().toString().isEmpty())
-                            Picasso.get().load(snapshot.child("image_url").getValue().toString())
-                                    .placeholder(R.drawable.person_fill).into(holder.image_profile);
+                        if (snapshot.child("image_url").getValue().toString().isEmpty())
+                            holder.image_profile.setImageResource(R.drawable.ic_baseline_person);
+                        else
+                            Picasso.get().load(snapshot.child("image_url")
+                                    .getValue().toString()).into(holder.image_profile);
 
                     }
 
@@ -114,8 +115,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             if (v.getTag().equals("Saved")) {
                 FirebaseDatabase.getInstance().getReference()
                         .child("saved").child(auth.getUid()).child(post.getPost_id()).setValue(true);
-            }
-            else {
+            } else {
                 FirebaseDatabase.getInstance().getReference()
                         .child("saved").child(auth.getUid()).child(post.getPost_id()).removeValue();
             }
@@ -142,19 +142,23 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
 
                 addNoti(post.getPost_id(), post.getUser_id(), "Liked your post", true);
 
+//                full-on animation
+                holder.like_heart.animate()
+                        .scaleX(1.2f).scaleY(1.2f).setDuration(100);
+
                 Handler handler = new Handler();
                 handler.postDelayed(() -> {
                     holder.like_heart.animate()
                             .scaleX(0.01f).scaleY(0.01f).alpha(0.4f)
-                            .setDuration(500);
-                }, 200);
+                            .setDuration(400);
+                }, 250);
 
                 handler.postDelayed(() -> {
                     holder.like_heart.setVisibility(View.GONE);
                     holder.like_heart.animate()
                             .scaleX(1f).scaleY(1f).alpha(1f)
                             .setDuration(0);
-                }, 750);
+                }, 650);
             }
         }));
 
@@ -285,14 +289,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             comment = itemView.findViewById(R.id.comment);
             save = itemView.findViewById(R.id.save);
             more = itemView.findViewById(R.id.more);
+            like_heart = itemView.findViewById(R.id.like_heart);
 
             user_name = itemView.findViewById(R.id.user_name);
             noOfLikes = itemView.findViewById(R.id.no_of_likes);
             author = itemView.findViewById(R.id.author);
             noOfComments = itemView.findViewById(R.id.no_of_comments);
             description = itemView.findViewById(R.id.description);
-
-            like_heart = itemView.findViewById(R.id.like_heart);
         }
     }
 }

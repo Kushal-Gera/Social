@@ -57,9 +57,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         holder.name.setText(user.getName());
         holder.user_name.setText(user.getUser_name());
 
-        if (!user.getImage_url().isEmpty())
-            Picasso.get().load(user.getImage_url())
-                    .placeholder(R.drawable.person_fill).into(holder.imageProfile);
+        if (user.getImage_url().isEmpty())
+            holder.imageProfile.setImageResource(R.drawable.ic_baseline_person);
+        else
+            Picasso.get().load(user.getImage_url()).into(holder.imageProfile);
 
         isFollowed(user.getId(), holder.btnFollow);
 
@@ -79,8 +80,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         .setValue(true);
 
                 addNoti("", user.getId(), "Started following you", false);
-            }
-            else {
+            } else {
                 FirebaseDatabase.getInstance().getReference()
                         .child("followings").child(auth.getUid())
                         .child(user.getId())

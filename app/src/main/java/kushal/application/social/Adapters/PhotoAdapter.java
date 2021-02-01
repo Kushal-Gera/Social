@@ -40,7 +40,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
 
         final Post post = mPosts.get(position);
 
-        Picasso.get().load(post.getImage_url())
+        Picasso.get().load(post.getImage_url()).fit().centerCrop()
                 .placeholder(R.drawable.placeholder).into(holder.postImage);
 
         holder.postImage.setOnClickListener(v -> {
