@@ -56,7 +56,7 @@ public class DiscoverFrag extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         notificationList = new ArrayList<>();
         notificationAdapter = new NotificationAdapter(getContext(), notificationList);
-        notificationAdapter.setHasStableIds(true);
+//        notificationAdapter.setHasStableIds(true);
         recyclerView.setAdapter(notificationAdapter);
 
         close.setOnClickListener(v -> {

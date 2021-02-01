@@ -87,7 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
         recyclerview_mypictures.setLayoutManager(new GridLayoutManager(this, 3));
         myPhotoList = new ArrayList<>();
         photoAdapter = new PhotoAdapter(this, myPhotoList);
-        photoAdapter.setHasStableIds(true);
+//        photoAdapter.setHasStableIds(true);
         recyclerview_mypictures.setAdapter(photoAdapter);
 
         recycler_view_saved = findViewById(R.id.recycler_view_saved);
