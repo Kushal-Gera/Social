@@ -2,11 +2,13 @@ package kushal.application.social.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -27,11 +29,14 @@ import kushal.application.social.CommentActivity;
 import kushal.application.social.Models.Post;
 import kushal.application.social.R;
 
+import static java.lang.Math.max;
+
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> {
 
     private Context mContext;
     private List<Post> mPosts;
     FirebaseUser auth;
+    long cnt = 0;
 
     public PhotoAdapter(Context mContext, List<Post> mPosts) {
         this.mContext = mContext;
@@ -84,17 +89,41 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         Log.i("got in", "here again");
 
+//        from notifications
+        cnt = 0;
+        ref.child("notifications").child(auth.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (dataSnapshot.child("post_id").exists() &&
+                            !TextUtils.isEmpty(dataSnapshot.child("post_id").getValue().toString()))
+                        if (dataSnapshot.child("post_id").getValue().toString().equals(post.getPost_id())) {
+                            Log.i("post_id", dataSnapshot.getRef().toString());
+                            dataSnapshot.getRef().removeValue();
+                            cnt++;
+                            notifyDataSetChanged();
+                        }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
 //        from user->posts
         ref.child("users").child(auth.getUid()).child("posts").child(post.getPost_id()).removeValue();
 
-        //from posts
+//        from posts
         ref.child("posts").child(post.getPost_id()).removeValue();
 
-        //from likes
+//        from likes
         ref.child("likes").child(post.getPost_id()).removeValue();
 
 //        from saved
-        ref.child("saved").addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.child("saved").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot _user_ids : snapshot.getChildren()) {
@@ -111,26 +140,12 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
 //        from comments
         ref.child("comments").child(post.getPost_id()).removeValue();
 
-        //from notifications
-        ref.child("notifications").child(auth.getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            if (dataSnapshot.child("post_id").exists())
-                                if (dataSnapshot.child("post_id").getValue().toString().equals(post.getPost_id())) {
-                                    Log.i("post_id", dataSnapshot.child("post_id").getRef().getParent().toString());
-                                    dataSnapshot.child("post_id").getRef().getParent().removeValue();
-                                }
-                        }
-                    }
+        long saved_count = mContext.getSharedPreferences("shared_pref", Context.MODE_PRIVATE)
+                .getLong("notification_count", 0);
+        mContext.getSharedPreferences("shared_pref", Context.MODE_PRIVATE).edit()
+                .putLong("notification_count", max(saved_count - cnt, 0)).apply();
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
+        Toast.makeText(mContext, "Deleted", Toast.LENGTH_SHORT).show();
     }
 
     @Override

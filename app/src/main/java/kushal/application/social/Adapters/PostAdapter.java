@@ -196,11 +196,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                 .child(postId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount() > 1)
+                if (dataSnapshot.getChildrenCount() > 1) {
+                    text.setVisibility(View.VISIBLE);
                     text.setText("View All " + dataSnapshot.getChildrenCount() + " Comments");
-                else if (dataSnapshot.getChildrenCount() == 1)
+                } else if (dataSnapshot.getChildrenCount() == 1) {
+                    text.setVisibility(View.VISIBLE);
                     text.setText("View " + dataSnapshot.getChildrenCount() + " Comment");
-                else
+                } else
                     text.setVisibility(View.GONE);
             }
 
