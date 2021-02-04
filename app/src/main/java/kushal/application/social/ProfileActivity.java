@@ -87,7 +87,6 @@ public class ProfileActivity extends AppCompatActivity {
         recyclerview_mypictures.setLayoutManager(new GridLayoutManager(this, 3));
         myPhotoList = new ArrayList<>();
         photoAdapter = new PhotoAdapter(this, myPhotoList);
-//        photoAdapter.setHasStableIds(true);
         recyclerview_mypictures.setAdapter(photoAdapter);
 
         recycler_view_saved = findViewById(R.id.recycler_view_saved);
@@ -180,9 +179,9 @@ public class ProfileActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-
+                        savedIds.clear();
                         for (DataSnapshot snapshot : datasnapshot.getChildren())
-                            savedIds.add(snapshot.getKey().toString());
+                            savedIds.add(snapshot.getKey());
 
                         FirebaseDatabase.getInstance().getReference()
                                 .child("posts").addValueEventListener(new ValueEventListener() {
@@ -191,7 +190,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 mySavedList.clear();
 
                                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                    if (savedIds.contains(dataSnapshot.getKey().toString()))
+                                    if (savedIds.contains(dataSnapshot.getKey()))
                                         mySavedList.add(dataSnapshot.getValue(Post.class));
                                 }
 
