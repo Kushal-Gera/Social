@@ -87,6 +87,14 @@ public class CommentActivity extends AppCompatActivity {
         Picasso.get().load(post_image_url).into(post_image);
         auth = FirebaseAuth.getInstance().getCurrentUser();
 
+        post_image.setOnLongClickListener(v -> {
+            if (post_image.getScaleType() == ImageView.ScaleType.CENTER_CROP)
+                post_image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            else
+                post_image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            return true;
+        });
+
         send.setOnClickListener(v -> {
             if (!TextUtils.isEmpty(addComment.getText().toString()))
                 putComment();

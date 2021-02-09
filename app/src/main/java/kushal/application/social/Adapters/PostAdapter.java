@@ -60,7 +60,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
 
         Post post = mlist.get(position);
 
-        Picasso.get().load(post.getImage_url()).fit().centerCrop()
+        Picasso.get().load(post.getImage_url())
                 .placeholder(R.drawable.placeholder).into(holder.post_image);
         holder.description.setText(post.getDescription());
 
@@ -164,6 +164,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                 }, 650);
             }
         }));
+
+        holder.post_image.setOnLongClickListener(v -> {
+            if (holder.post_image.getScaleType() == ImageView.ScaleType.CENTER_CROP)
+                holder.post_image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            else
+                holder.post_image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//            Toast.makeText(mcontext, "changed", Toast.LENGTH_SHORT).show();
+            return true;
+        });
 
         holder.comment.setOnClickListener(v -> holder.post_image.performClick());
 
