@@ -1,6 +1,8 @@
 package kushal.application.social.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +30,6 @@ import java.util.ArrayList;
 
 import kushal.application.social.Adapters.PostAdapter;
 import kushal.application.social.ChatActivity;
-import kushal.application.social.MainActivity;
 import kushal.application.social.Models.Post;
 import kushal.application.social.PostActivity;
 import kushal.application.social.R;
@@ -43,6 +45,8 @@ public class HomeFrag extends Fragment {
     ImageView post_now;
     FrameLayout chat;
 
+    private static final String SHARED_PREF = "shared_pref";
+    SharedPreferences pref;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,6 +70,8 @@ public class HomeFrag extends Fragment {
 
         adapter = new PostAdapter(getContext(), mlist);
         recycler_view.setAdapter(adapter);
+        pref = getContext().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+
 
         post_now.setOnClickListener(v -> {
             startActivity(new Intent(getContext(), PostActivity.class));
@@ -78,6 +84,7 @@ public class HomeFrag extends Fragment {
 
         MyTask myTask = new MyTask();
         myTask.execute();
+
 
         return view;
     }
@@ -99,6 +106,17 @@ public class HomeFrag extends Fragment {
 
                     progressBar.setVisibility(View.GONE);
                     adapter.notifyDataSetChanged();
+
+                    if (!mlist.isEmpty()) {
+                        int times = pref.getInt("first_home", 0);
+                        if (times < 3) {
+                            Snackbar.make(getActivity().findViewById(R.id.container),
+                                    "Long press on posts to change scale-type",
+                                    Snackbar.LENGTH_LONG).show();
+                            pref.edit().putInt("first_home", times + 1).apply();
+                        }
+                    }
+
                 }
 
                 @Override
@@ -106,6 +124,7 @@ public class HomeFrag extends Fragment {
 
                 }
             });
+
             return null;
         }
     }

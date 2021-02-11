@@ -1,6 +1,8 @@
 package kushal.application.social;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,13 +37,13 @@ import kushal.application.social.Models.User;
 
 public class ProfileActivity extends AppCompatActivity {
 
-
     private PhotoAdapter postAdapterSaved;
     private List<Post> mySavedList;
 
-    private RecyclerView recyclerview_mypictures, recycler_view_saved;
     private PhotoAdapter photoAdapter;
     private List<Post> myPhotoList;
+
+    private RecyclerView recyclerview_mypictures, recycler_view_saved;
 
     private CircleImageView imageProfile;
     private TextView followers;
@@ -58,6 +61,10 @@ public class ProfileActivity extends AppCompatActivity {
 
     String user_id;
     FirebaseUser auth;
+
+    SharedPreferences pref;
+    private static final String SHARED_PREF = "shared_pref";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
         progress_bar = findViewById(R.id.progress_bar);
         options = findViewById(R.id.options);
 
+        pref = getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
 
         recyclerview_mypictures = findViewById(R.id.recyclerview_mypictures);
         recyclerview_mypictures.setHasFixedSize(true);
@@ -317,6 +325,17 @@ public class ProfileActivity extends AppCompatActivity {
                     Collections.reverse(myPhotoList);
                     photoAdapter.notifyDataSetChanged();
                     progress_bar.setVisibility(View.GONE);
+
+                    if (!myPhotoList.isEmpty() && auth.getUid().equals(user_id)) {
+                        int times = pref.getInt("first_prof", 0);
+                        if (times < 3) {
+                            Snackbar.make(recyclerview_mypictures,
+                                    "Long press on posts to delete them",
+                                    Snackbar.LENGTH_LONG).show();
+                            pref.edit().putInt("first_prof", times + 1).apply();
+                        }
+                    }
+
                 }
 
                 @Override

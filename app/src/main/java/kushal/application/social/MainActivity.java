@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     int PRE_SELECTED_ID = 0;
 
     TextView notify_home, notify_search, notify_post, notify_discover, notify_profile;
-    private static String SHARED_PREF = "shared_pref";
+    private static final String SHARED_PREF = "shared_pref";
 
 
     @Override
