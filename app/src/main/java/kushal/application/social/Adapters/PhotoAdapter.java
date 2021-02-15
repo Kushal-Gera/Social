@@ -75,8 +75,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.progress_dialog_theme);
 
-                builder.setTitle("Do you want to delete it permanently ?");
-                builder.setMessage("It can never be recovered !");
+                builder.setTitle("Do you want to delete it ?");
+                builder.setMessage("It can never be restored.");
                 builder.setPositiveButton("Yes", (dialog, which) -> deleteIt(post));
                 builder.setNegativeButton("no", (dialog, which) -> dialog.dismiss());
                 builder.show();

@@ -53,6 +53,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        holder.setIsRecyclable(false);
         final Comment comment = mComments.get(position);
 
         holder.comment.setText(comment.getComment());

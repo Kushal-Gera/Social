@@ -1,5 +1,6 @@
 package kushal.application.social;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -66,6 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String SHARED_PREF = "shared_pref";
 
 
+    @SuppressLint({"ClickableViewAccessibility", "UseCompatLoadingForDrawables"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,6 +163,22 @@ public class ProfileActivity extends AppCompatActivity {
                     i.putExtra("user_id", user_id);
                     startActivity(i);
                 }
+            }
+        });
+
+
+        recyclerview_mypictures.setOnTouchListener(new OnSwipeTouchListener(this) {
+            @Override
+            public void onSwipeLeft() {
+                savedPictures.performClick();
+                super.onSwipeLeft();
+            }
+        });
+        recycler_view_saved.setOnTouchListener(new OnSwipeTouchListener(this) {
+            @Override
+            public void onSwipeRight() {
+                myPictures.performClick();
+                super.onSwipeLeft();
             }
         });
 

@@ -67,9 +67,9 @@ public class HomeFrag extends Fragment {
 
         mlist = new ArrayList<>();
         progressBar.setVisibility(View.VISIBLE);
-
         adapter = new PostAdapter(getContext(), mlist);
         recycler_view.setAdapter(adapter);
+
         pref = getContext().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
 
 

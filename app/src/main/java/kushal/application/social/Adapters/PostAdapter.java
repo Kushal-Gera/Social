@@ -58,6 +58,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
     @Override
     public void onBindViewHolder(@NonNull PostAdapter.Viewholder holder, int position) {
 
+        holder.setIsRecyclable(false);
+
         Post post = mlist.get(position);
 
         Picasso.get().load(post.getImage_url())
