@@ -93,8 +93,8 @@
     </androidx.appcompat.widget.Toolbar>
 
     <include
-        android:id="@+id/shimmer_view_container"
-        layout="@layout/shimmer_loading"
+        android:id="@+id/shimmer_view_post"
+        layout="@layout/shimmer_post"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone" />

@@ -58,7 +58,7 @@ public class HomeFrag extends Fragment {
         post_now = view.findViewById(R.id.post_now);
         chat = view.findViewById(R.id.chat);
 
-        shimmer = view.findViewById(R.id.shimmer_view_container);
+        shimmer = view.findViewById(R.id.shimmer_view_post);
         recycler_view = view.findViewById(R.id.recycler_view);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setReverseLayout(true);
@@ -82,8 +82,8 @@ public class HomeFrag extends Fragment {
         });
 
 
-//        MyTask myTask = new MyTask();
-//        myTask.execute();
+        MyTask myTask = new MyTask();
+        myTask.execute();
 
 
         return view;

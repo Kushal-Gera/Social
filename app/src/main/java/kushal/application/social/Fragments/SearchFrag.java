@@ -8,13 +8,13 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -38,7 +38,8 @@ public class SearchFrag extends Fragment {
     private RecyclerView recyclerViewTags;
     private List<String> mHashTags;
     private TagAdapter tagAdapter;
-    ProgressBar progress_bar;
+
+    ShimmerFrameLayout shimmer;
 
     private SocialAutoCompleteTextView search_bar;
 
@@ -47,8 +48,8 @@ public class SearchFrag extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        progress_bar = view.findViewById(R.id.progress_bar);
-        progress_bar.setVisibility(View.VISIBLE);
+        shimmer = view.findViewById(R.id.shimmer_view_search);
+        shimmer.setVisibility(View.VISIBLE);
 
         recyclerView = view.findViewById(R.id.recycler_view_users);
         recyclerView.setHasFixedSize(true);
@@ -167,7 +168,7 @@ public class SearchFrag extends Fragment {
                         }
 
                         searchAdapter.notifyDataSetChanged();
-                        progress_bar.setVisibility(View.GONE);
+                        shimmer.setVisibility(View.GONE);
                     }
                 }
 
