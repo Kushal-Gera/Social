@@ -10,13 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,7 +40,7 @@ public class HomeFrag extends Fragment {
     FirebaseUser auth;
     RecyclerView recycler_view;
     PostAdapter adapter;
-    ProgressBar progressBar;
+    ShimmerFrameLayout shimmer;
 
     ImageView post_now;
     FrameLayout chat;
@@ -58,7 +58,7 @@ public class HomeFrag extends Fragment {
         post_now = view.findViewById(R.id.post_now);
         chat = view.findViewById(R.id.chat);
 
-        progressBar = view.findViewById(R.id.progressBar);
+        shimmer = view.findViewById(R.id.shimmer_view_container);
         recycler_view = view.findViewById(R.id.recycler_view);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setReverseLayout(true);
@@ -66,7 +66,7 @@ public class HomeFrag extends Fragment {
         recycler_view.setLayoutManager(llm);
 
         mlist = new ArrayList<>();
-        progressBar.setVisibility(View.VISIBLE);
+        shimmer.setVisibility(View.VISIBLE);
         adapter = new PostAdapter(getContext(), mlist);
         recycler_view.setAdapter(adapter);
 
@@ -82,8 +82,8 @@ public class HomeFrag extends Fragment {
         });
 
 
-        MyTask myTask = new MyTask();
-        myTask.execute();
+//        MyTask myTask = new MyTask();
+//        myTask.execute();
 
 
         return view;
@@ -104,7 +104,7 @@ public class HomeFrag extends Fragment {
                         mlist.add(post);
                     }
 
-                    progressBar.setVisibility(View.GONE);
+                    shimmer.setVisibility(View.GONE);
                     adapter.notifyDataSetChanged();
 
                     if (!mlist.isEmpty()) {

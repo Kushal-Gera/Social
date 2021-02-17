@@ -92,13 +92,12 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
+    <include
+        android:id="@+id/shimmer_view_container"
+        layout="@layout/shimmer_loading"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp"
-        android:indeterminateTint="@color/dark_gray"
-        android:visibility="visible" />
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"

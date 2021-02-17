@@ -167,21 +167,6 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
 
-        recyclerview_mypictures.setOnTouchListener(new OnSwipeTouchListener(this) {
-            @Override
-            public void onSwipeLeft() {
-                savedPictures.performClick();
-                super.onSwipeLeft();
-            }
-        });
-        recycler_view_saved.setOnTouchListener(new OnSwipeTouchListener(this) {
-            @Override
-            public void onSwipeRight() {
-                myPictures.performClick();
-                super.onSwipeLeft();
-            }
-        });
-
     }
 
     private void addNoti(String post_id, String user_id, String text, Boolean isPost) {

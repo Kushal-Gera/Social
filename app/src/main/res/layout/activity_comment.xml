@@ -175,7 +175,7 @@
                 android:inputType="textCapSentences|textMultiLine"
                 android:maxLines="4"
                 android:textColor="@color/black"
-                android:textColorHint="@color/text_color_secondry" />
+                android:textColorHint="@color/text_color_secondary" />
 
             <ImageView
                 android:id="@+id/send"
