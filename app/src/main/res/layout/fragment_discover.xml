@@ -63,20 +63,20 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
+    <include
+        android:id="@+id/shimmer_view_discover"
+        layout="@layout/shimmer_discover"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/bar"
         android:layout_marginTop="10dp"
-        android:indeterminateTint="@color/dark_gray"
         android:visibility="visible" />
-    
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/progress_bar"
+        android:layout_below="@+id/shimmer_view_discover"
         android:layout_marginStart="4dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="4dp"

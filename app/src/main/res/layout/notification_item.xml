@@ -44,13 +44,14 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="8dp"/>
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/description" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="4dp"
         android:layout_below="@id/image_profile"
+        android:layout_marginTop="4dp"
         android:background="@color/dark_gray" />
 
 </RelativeLayout>

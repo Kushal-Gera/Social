@@ -7,13 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,8 +36,8 @@ public class DiscoverFrag extends Fragment {
     private List<Notification> notificationList;
     FirebaseUser auth;
     private static String SHARED_PREF = "shared_pref";
-    ProgressBar progressBar;
 
+    ShimmerFrameLayout shimmer;
     ImageView close;
 
 
@@ -50,13 +50,12 @@ public class DiscoverFrag extends Fragment {
 
         close = view.findViewById(R.id.close);
 
-        progressBar = view.findViewById(R.id.progress_bar);
+        shimmer = view.findViewById(R.id.shimmer_view_discover);
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         notificationList = new ArrayList<>();
         notificationAdapter = new NotificationAdapter(getContext(), notificationList);
-//        notificationAdapter.setHasStableIds(true);
         recyclerView.setAdapter(notificationAdapter);
 
         close.setOnClickListener(v -> {
@@ -85,7 +84,7 @@ public class DiscoverFrag extends Fragment {
 
                     Collections.reverse(notificationList);
                     notificationAdapter.notifyDataSetChanged();
-                    progressBar.setVisibility(View.GONE);
+                    shimmer.setVisibility(View.GONE);
 
                     long notification_count = notificationList.size();
                     if (getActivity() != null)
