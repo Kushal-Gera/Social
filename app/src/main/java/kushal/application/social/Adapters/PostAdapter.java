@@ -1,8 +1,14 @@
 package kushal.application.social.Adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -10,10 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.androidnetworking.AndroidNetworking;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +34,7 @@ import com.pedromassango.doubleclick.DoubleClick;
 import com.pedromassango.doubleclick.DoubleClickListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -39,13 +48,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
     ArrayList<Post> mlist;
     Context mcontext;
     FirebaseUser auth;
+    Dialog dialog;
+    public static final String DIR_NAME = "Social";
 
     public PostAdapter(Context mcontext, ArrayList<Post> mlist) {
         this.mlist = mlist;
         this.mcontext = mcontext;
         auth = FirebaseAuth.getInstance().getCurrentUser();
-    }
 
+        dialog = new Dialog(mcontext);
+        AndroidNetworking.initialize(mcontext);
+    }
 
     @NonNull
     @Override
@@ -179,6 +192,62 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         holder.comment.setOnClickListener(v -> holder.post_image.performClick());
 
         holder.noOfComments.setOnClickListener(v -> holder.post_image.performClick());
+
+        holder.more.setOnClickListener(v -> {
+            dialog.setContentView(R.layout.more_dialog);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+
+            dialog.findViewById(R.id.cancel_dia).setOnClickListener(v1 -> dialog.dismiss());
+            dialog.findViewById(R.id.report_dia).setOnClickListener(v1 -> {
+                Toast.makeText(mcontext, "reported", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            });
+            dialog.findViewById(R.id.block_dia).setOnClickListener(v1 -> {
+                Toast.makeText(mcontext, "blocked", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            });
+
+            dialog.findViewById(R.id.go_prof_dia).setOnClickListener(v1 -> {
+                holder.user_name.performClick();
+                dialog.dismiss();
+            });
+            dialog.findViewById(R.id.save_dia).setOnClickListener(v1 -> {
+                FirebaseDatabase.getInstance().getReference()
+                        .child("saved").child(auth.getUid()).child(post.getPost_id()).setValue(true);
+                dialog.dismiss();
+            });
+            dialog.findViewById(R.id.download_dia).setOnClickListener(v1 -> {
+                Toast.makeText(mcontext, "downloading in background", Toast.LENGTH_SHORT).show();
+                download_img(post.getImage_url());
+                dialog.dismiss();
+            });
+
+        });
+    }
+
+    private void download_img(String image_url) {
+
+        String filename = "post." + System.currentTimeMillis() + ".jpg";
+        File direct = new File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                        .getAbsolutePath() + "/" + DIR_NAME + "/");
+
+        if (!direct.exists())
+            direct.mkdir();
+
+        DownloadManager dm = (DownloadManager) mcontext.getSystemService(Context.DOWNLOAD_SERVICE);
+        Uri downloadUri = Uri.parse(image_url);
+        DownloadManager.Request request = new DownloadManager.Request(downloadUri);
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                .setAllowedOverRoaming(false)
+                .setTitle(filename)
+                .setMimeType("image/jpeg")
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES,
+                        File.separator + DIR_NAME + File.separator + filename);
+
+        dm.enqueue(request);
     }
 
     private void shareURL(String url) {

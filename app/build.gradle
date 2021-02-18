@@ -52,5 +52,7 @@ dependencies {
     implementation 'com.github.pedromassango:doubleClick:3.0'
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
 
+    implementation 'com.artjimlop:altex-image-downloader:0.0.4'
+    implementation 'com.amitshekhar.android:android-networking:1.0.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 }
