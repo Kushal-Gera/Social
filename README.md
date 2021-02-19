@@ -1,5 +1,5 @@
-# Social App [Instagram Clone]
-
+# Social [Instagram Clone]
+ 
 ## Libraries Used for the Project
 
 * ##### com.google.firebase:firebase:19.x.x
