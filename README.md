@@ -1,4 +1,4 @@
-# Social [Instagram Clone]
+# Social App [Instagram Clone]
  
 ## Libraries Used for the Project
 
