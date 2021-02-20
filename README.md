@@ -1,5 +1,5 @@
 # Social App [Instagram Clone]
-### Social Networking App for sharing & commenting on posts and following & chatting with friends, family.
+### Social Networking App for sharing & commenting on posts and following & chatting with friends, family n relatives.
  
 ## Libraries Used for the Project
 
