@@ -78,7 +78,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         Picasso.get().load(post.getImage_url())
                 .placeholder(R.drawable.placeholder).into(holder.post_image);
         holder.description.setText(post.getDescription());
-        
+
         FirebaseDatabase.getInstance().getReference().child("users").child(post.getUser_id())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -160,23 +160,29 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
 
                 addNoti(post.getPost_id(), post.getUser_id(), "Liked your post", true);
 
-//                full-on animation
+//                full-on animation from here
                 holder.like_heart.animate()
-                        .scaleX(1.2f).scaleY(1.2f).setDuration(100);
+                        .scaleX(1.2f).scaleY(1.2f).setDuration(50);
 
                 Handler handler = new Handler();
-                handler.postDelayed(() -> {
-                    holder.like_heart.animate()
-                            .scaleX(0.01f).scaleY(0.01f).alpha(0.4f)
-                            .setDuration(400);
-                }, 250);
+                // animation to wiggle
+                handler.postDelayed(() ->
+                        holder.like_heart.animate()
+                                .scaleX(1.1f).scaleY(1.1f).setDuration(50), 50);
 
+                // animation to shrink complete
+                handler.postDelayed(() ->
+                        holder.like_heart.animate()
+                                .scaleX(0.01f).scaleY(0.01f).alpha(0.4f)
+                                .setDuration(400), 300);
+
+                // animation to hide
                 handler.postDelayed(() -> {
                     holder.like_heart.setVisibility(View.GONE);
                     holder.like_heart.animate()
                             .scaleX(1f).scaleY(1f).alpha(1f)
                             .setDuration(0);
-                }, 650);
+                }, 700);
             }
         }));
 

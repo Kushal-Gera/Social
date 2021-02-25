@@ -89,20 +89,20 @@ public class CommentActivity extends AppCompatActivity {
         Picasso.get().load(post_image_url).into(post_image);
         auth = FirebaseAuth.getInstance().getCurrentUser();
 
-        FirebaseDatabase.getInstance()
-                .getReference().child("users").child(auth.getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.child("image_url").exists())
-                    Picasso.get().load(snapshot.child("image_url").getValue().toString())
-                            .placeholder(R.drawable.person_fill).into(prof_image);
-            }
+        FirebaseDatabase.getInstance().getReference().child("users").child(auth.getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.child("image_url").exists())
+                            Picasso.get().load(snapshot.child("image_url").getValue().toString())
+                                    .placeholder(R.drawable.person_fill).into(prof_image);
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                    }
+                });
 
 
         post_image.setOnLongClickListener(v -> {

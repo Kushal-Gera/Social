@@ -166,6 +166,7 @@
                 android:layout_marginEnd="4dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/description"
+                android:src="@drawable/ic_baseline_person"
                 app:tint="@color/blue" />
 
             <EditText
@@ -178,7 +179,7 @@
                 android:layout_weight="8"
                 android:backgroundTint="@color/black"
                 android:gravity="center_vertical"
-                android:hint="share your thoughts here..."
+                android:hint="comments..."
                 android:importantForAutofill="no"
                 android:inputType="textCapSentences|textMultiLine"
                 android:maxLines="4"

@@ -56,7 +56,8 @@ public class HomeFrag extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        auth = FirebaseAuth.getInstance().getCurrentUser();
+        auth =
+                FirebaseAuth.getInstance().getCurrentUser();
 
         post_now = view.findViewById(R.id.post_now);
         chat = view.findViewById(R.id.chat);
