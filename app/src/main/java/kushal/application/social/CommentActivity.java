@@ -45,6 +45,7 @@ public class CommentActivity extends AppCompatActivity {
     private CircleImageView imageProfile;
     private TextView user_nameee;
     ImageView send, post_image, close;
+    CircleImageView prof_image;
 
     private String post_id;
     private String profile_img_url, my_profile_img;
@@ -79,6 +80,7 @@ public class CommentActivity extends AppCompatActivity {
         addComment = findViewById(R.id.add_comment);
         close = findViewById(R.id.close);
         post_image = findViewById(R.id.post_image);
+        prof_image = findViewById(R.id.prof_image);
         imageProfile = findViewById(R.id.image_profile);
         user_nameee = findViewById(R.id.user_nameee);
         send = findViewById(R.id.send);
@@ -86,6 +88,22 @@ public class CommentActivity extends AppCompatActivity {
 
         Picasso.get().load(post_image_url).into(post_image);
         auth = FirebaseAuth.getInstance().getCurrentUser();
+
+        FirebaseDatabase.getInstance()
+                .getReference().child("users").child(auth.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.child("image_url").exists())
+                    Picasso.get().load(snapshot.child("image_url").getValue().toString())
+                            .placeholder(R.drawable.person_fill).into(prof_image);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
         post_image.setOnLongClickListener(v -> {
             if (post_image.getScaleType() == ImageView.ScaleType.CENTER_CROP)

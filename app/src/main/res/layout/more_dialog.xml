@@ -29,11 +29,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
+                android:letterSpacing="0.1"
                 android:paddingTop="13dp"
                 android:paddingBottom="13dp"
                 android:text="Report"
                 android:textColor="@color/red"
-                android:textSize="20sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <View
                 android:layout_width="match_parent"
@@ -49,7 +51,7 @@
                 android:paddingBottom="13dp"
                 android:text="Save Post"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -65,7 +67,7 @@
                 android:paddingBottom="13dp"
                 android:text="Go To Profile"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -81,7 +83,7 @@
                 android:paddingBottom="13dp"
                 android:text="Download"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -97,7 +99,7 @@
                 android:paddingBottom="13dp"
                 android:text="Block"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -113,8 +115,7 @@
                 android:paddingBottom="13dp"
                 android:text="Cancel"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
-
+                android:textSize="18sp" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

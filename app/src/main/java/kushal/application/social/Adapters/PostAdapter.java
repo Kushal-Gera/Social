@@ -78,7 +78,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         Picasso.get().load(post.getImage_url())
                 .placeholder(R.drawable.placeholder).into(holder.post_image);
         holder.description.setText(post.getDescription());
-
+        
         FirebaseDatabase.getInstance().getReference().child("users").child(post.getUser_id())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -222,7 +222,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                 download_img(post.getImage_url());
                 dialog.dismiss();
             });
-
         });
     }
 
@@ -395,4 +394,5 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             description = itemView.findViewById(R.id.description);
         }
     }
+
 }

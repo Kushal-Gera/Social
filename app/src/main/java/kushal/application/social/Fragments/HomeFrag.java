@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.snackbar.Snackbar;
@@ -44,6 +46,7 @@ public class HomeFrag extends Fragment {
 
     ImageView post_now;
     FrameLayout chat;
+    SwipeRefreshLayout swipeRefresh;
 
     private static final String SHARED_PREF = "shared_pref";
     SharedPreferences pref;
@@ -59,6 +62,7 @@ public class HomeFrag extends Fragment {
         chat = view.findViewById(R.id.chat);
 
         shimmer = view.findViewById(R.id.shimmer_view_post);
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
         recycler_view = view.findViewById(R.id.recycler_view);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setReverseLayout(true);
@@ -80,6 +84,9 @@ public class HomeFrag extends Fragment {
         chat.setOnClickListener(v -> {
             startActivity(new Intent(getContext(), ChatActivity.class));
         });
+
+        swipeRefresh.setOnRefreshListener(() ->
+                new Handler().postDelayed(() -> swipeRefresh.setRefreshing(false), 800));
 
 
         MyTask myTask = new MyTask();
