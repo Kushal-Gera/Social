@@ -1,14 +1,20 @@
-# Social App [Instagram Clone]
+# Social [Instagram Clone]
+### Social Networking App for sharing & commenting on posts and following & chatting with friends, family n relatives.
+---
+<br/>
 
 ## Libraries Used for the Project
-
 * ##### com.google.firebase:firebase:19.x.x
 * ##### com.github.mirrajabi:search-dialog:1.x.x
 * ##### com.theartofdev.edmodo:android-image-cropper:2.x.x
 * ##### de.hdodenhof:circleimageview:3.x.x
 * ##### com.hendraanggrian.appcompat:socialview:0.2.x
 * ##### com.squareup.picasso:picasso:2.xxxx
----
+<br/>
+
+## Download App
+#### https://drive.google.com/file/d/1TtXdIBRWFIiYpx3rtWTWC8LtHDTpJjeW/view?usp=drivesdk
+<br/>
 
 ## Screenshots  
 
