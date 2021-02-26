@@ -7,12 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,6 +37,8 @@ public class DiscoverFrag extends Fragment {
     private NotificationAdapter notificationAdapter;
     private List<Notification> notificationList;
     FirebaseUser auth;
+    LottieAnimationView animationView;
+    TextView tv;
     private static String SHARED_PREF = "shared_pref";
 
     ShimmerFrameLayout shimmer;
@@ -49,6 +53,8 @@ public class DiscoverFrag extends Fragment {
         auth = FirebaseAuth.getInstance().getCurrentUser();
 
         close = view.findViewById(R.id.close);
+        animationView = view.findViewById(R.id.animationView);
+        tv = view.findViewById(R.id.tv);
 
         shimmer = view.findViewById(R.id.shimmer_view_discover);
         recyclerView = view.findViewById(R.id.recycler_view);
@@ -85,6 +91,15 @@ public class DiscoverFrag extends Fragment {
                     Collections.reverse(notificationList);
                     notificationAdapter.notifyDataSetChanged();
                     shimmer.setVisibility(View.GONE);
+
+                    if (notificationList.isEmpty()){
+                        animationView.setVisibility(View.VISIBLE);
+                        tv.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        animationView.setVisibility(View.GONE);
+                        tv.setVisibility(View.GONE);
+                    }
 
                     long notification_count = notificationList.size();
                     if (getActivity() != null)

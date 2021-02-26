@@ -179,7 +179,7 @@
                 android:layout_weight="8"
                 android:backgroundTint="@color/black"
                 android:gravity="center_vertical"
-                android:hint="comments..."
+                android:hint="add comment..."
                 android:importantForAutofill="no"
                 android:inputType="textCapSentences|textMultiLine"
                 android:maxLines="4"

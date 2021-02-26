@@ -1,7 +1,10 @@
 package kushal.application.social;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,7 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,8 +39,9 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser auth;
     private Boolean AT_HOME = true;
     int PRE_SELECTED_ID = 0;
+    LottieAnimationView animationView;
 
-    TextView notify_home, notify_search, notify_post, notify_discover, notify_profile;
+    TextView tv,notify_home, notify_search, notify_post, notify_discover, notify_profile;
     private static final String SHARED_PREF = "shared_pref";
 
 
@@ -44,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        tv = findViewById(R.id.tv);
+        animationView = findViewById(R.id.animationView);
         container = findViewById(R.id.container);
         bottom_navbar = findViewById(R.id.bottom_navbar);
 
@@ -109,6 +117,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        if (!isNetworkAvailable()) {
+            animationView.setVisibility(View.VISIBLE);
+            tv.setVisibility(View.VISIBLE);
+            container.setVisibility(View.GONE);
+
+            Snackbar.make(animationView, "No Internet", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Retry", v -> {
+                        startActivity(new Intent(MainActivity.this, MainActivity.class));
+                        finish();
+                    })
+                    .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
+                    .setActionTextColor(getResources().getColor(R.color.blue))
+                    .show();
+        }
+
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -173,5 +196,12 @@ public class MainActivity extends AppCompatActivity {
             bottom_navbar.findViewById(R.id.homepage).performClick();
             AT_HOME = true;
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return (activeNetworkInfo != null && activeNetworkInfo.isConnected());
     }
 }
