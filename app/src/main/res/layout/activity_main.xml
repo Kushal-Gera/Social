@@ -31,12 +31,32 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:padding="20dp"
         android:visibility="gone"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        app:lottie_rawRes="@raw/no_network"
-        app:lottie_speed="0.75"
+        app:lottie_rawRes="@raw/no_internet"
         tools:ignore="RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/restart_btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/animationView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="-180dp"
+        android:layout_marginEnd="56dp"
+        android:background="@drawable/gray_fill_bg"
+        android:backgroundTint="@color/blue"
+        android:gravity="center"
+        android:letterSpacing="0.07"
+        android:text="restart ?"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/container"

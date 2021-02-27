@@ -28,8 +28,8 @@ public class OptionsActivity extends AppCompatActivity {
 
         logOut.setOnClickListener(v -> {
             AlertDialog dialog = new AlertDialog.Builder(this, R.style.progress_dialog_theme).create();
-            dialog.setTitle("Do you want to Log Out ?");
-            dialog.setMessage("You can login anytime.\nAll your data will be preserved.");
+            dialog.setTitle("Do you want to Log Out now ?");
+            dialog.setMessage("You can login anytime later.\nAll your data will be preserved.");
 
             dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "No", (dialog1, which) -> dialog.dismiss());
             dialog.setButton(DialogInterface.BUTTON_POSITIVE, "yes", (dialog12, which) -> {

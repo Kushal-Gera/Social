@@ -71,12 +71,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/bar"
         android:layout_gravity="center"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="100dp"
         android:gravity="center_horizontal"
-        android:letterSpacing="0.1"
+        android:letterSpacing="0.07"
         android:text="Under Production"
-        android:textColor="@color/blue"
-        android:textSize="32sp"
+        android:textColor="@color/black"
+        android:textSize="28sp"
         android:textStyle="bold" />
 
     <com.airbnb.lottie.LottieAnimationView

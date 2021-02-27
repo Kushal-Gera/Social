@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
     int PRE_SELECTED_ID = 0;
     LottieAnimationView animationView;
 
-    TextView tv,notify_home, notify_search, notify_post, notify_discover, notify_profile;
+    TextView tv, restart_btn;
+    TextView notify_home, notify_search, notify_post, notify_discover, notify_profile;
     private static final String SHARED_PREF = "shared_pref";
 
 
@@ -51,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         tv = findViewById(R.id.tv);
+        restart_btn = findViewById(R.id.restart_btn);
         animationView = findViewById(R.id.animationView);
+
         container = findViewById(R.id.container);
         bottom_navbar = findViewById(R.id.bottom_navbar);
 
@@ -72,6 +74,26 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+
+        if (!isNetworkAvailable()) {
+            animationView.setVisibility(View.VISIBLE);
+            tv.setVisibility(View.VISIBLE);
+            restart_btn.setVisibility(View.VISIBLE);
+
+            container.setVisibility(View.GONE);
+            bottom_navbar.setVisibility(View.GONE);
+
+            restart_btn.setOnClickListener(v -> {
+                Intent i = new Intent(MainActivity.this, MainActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+                finish();
+            });
+
+            return;
+        }
 
         Query q = ref.child("users").child(auth.getUid());
         q.addValueEventListener(new ValueEventListener() {
@@ -116,21 +138,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        if (!isNetworkAvailable()) {
-            animationView.setVisibility(View.VISIBLE);
-            tv.setVisibility(View.VISIBLE);
-            container.setVisibility(View.GONE);
-
-            Snackbar.make(animationView, "No Internet", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Retry", v -> {
-                        startActivity(new Intent(MainActivity.this, MainActivity.class));
-                        finish();
-                    })
-                    .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
-                    .setActionTextColor(getResources().getColor(R.color.blue))
-                    .show();
-        }
 
     }
 
