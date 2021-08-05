@@ -165,9 +165,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="4dp"
                 android:layout_weight="1"
-                android:contentDescription="@string/description"
-                android:src="@drawable/ic_baseline_person"
-                app:tint="@color/blue" />
+                android:contentDescription="@string/description" />
 
             <EditText
                 android:id="@+id/add_comment"

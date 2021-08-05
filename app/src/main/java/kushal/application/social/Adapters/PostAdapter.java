@@ -5,8 +5,11 @@ import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -19,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.androidnetworking.AndroidNetworking;
@@ -33,6 +37,7 @@ import com.hendraanggrian.appcompat.widget.SocialTextView;
 import com.pedromassango.doubleclick.DoubleClick;
 import com.pedromassango.doubleclick.DoubleClickListener;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -77,6 +82,29 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
 
         Picasso.get().load(post.getImage_url())
                 .placeholder(R.drawable.placeholder).into(holder.post_image);
+
+        //get dominant color
+        Picasso.get().load(post.getImage_url())
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        Palette.from(bitmap).generate(p -> {
+                            int c = p.getDominantColor(mcontext.getResources().getColor(R.color.text_color_secondary));
+                            holder.save.setColorFilter(c);
+                        });
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                });
+
         holder.description.setText(post.getDescription());
 
         FirebaseDatabase.getInstance().getReference().child("users").child(post.getUser_id())

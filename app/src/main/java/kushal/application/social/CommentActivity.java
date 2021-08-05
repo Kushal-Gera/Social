@@ -95,7 +95,7 @@ public class CommentActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.child("image_url").exists())
                             Picasso.get().load(snapshot.child("image_url").getValue().toString())
-                                    .placeholder(R.drawable.person_fill).into(prof_image);
+                                    .placeholder(R.drawable.ic_baseline_person).into(prof_image);
                     }
 
                     @Override

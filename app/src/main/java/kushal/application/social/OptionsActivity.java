@@ -35,6 +35,9 @@ public class OptionsActivity extends AppCompatActivity {
             dialog.setButton(DialogInterface.BUTTON_POSITIVE, "yes", (dialog12, which) -> {
                 FirebaseAuth.getInstance().signOut();
 
+                getSharedPreferences("shared_pref", MODE_PRIVATE).edit()
+                        .putLong("notification_count", 0).apply();
+
                 Intent i = new Intent(OptionsActivity.this, LoginActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                         Intent.FLAG_ACTIVITY_CLEAR_TASK |
@@ -43,6 +46,7 @@ public class OptionsActivity extends AppCompatActivity {
                 finish();
             });
             dialog.show();
+
         });
 
         close.setOnClickListener(v -> finish());
