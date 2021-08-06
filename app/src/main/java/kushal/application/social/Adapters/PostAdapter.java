@@ -6,7 +6,6 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -84,26 +83,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                 .placeholder(R.drawable.placeholder).into(holder.post_image);
 
         //get dominant color
-        Picasso.get().load(post.getImage_url())
-                .into(new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        Palette.from(bitmap).generate(p -> {
-                            int c = p.getDominantColor(mcontext.getResources().getColor(R.color.text_color_secondary));
-                            holder.save.setColorFilter(c);
-                        });
-                    }
-
-                    @Override
-                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                    }
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                    }
+        Picasso.get().load(post.getImage_url()).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                Palette.from(bitmap).generate(p -> {
+                    int c = p.getDominantColor(mcontext.getResources().getColor(R.color.black));
+                    holder.save.setColorFilter(c);
                 });
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        });
 
         holder.description.setText(post.getDescription());
 
