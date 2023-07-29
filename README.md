@@ -20,17 +20,12 @@
 
 ## Screenshots  
 
-<table><tr><td>
-    <img src="https://user-images.githubusercontent.com/53964520/106387211-bede1300-63fe-11eb-92d3-3f69b7cace9d.jpg" height="500" width="250" />
-</td></tr></table>
 
-<table><tr><td>
-    <img src="https://user-images.githubusercontent.com/53964520/106387213-c0a7d680-63fe-11eb-8896-5d3c51f5a24b.jpg" height="500" width="250" />
-</td></tr></table>
-
-<table><tr><td>
-    <img src="https://user-images.githubusercontent.com/53964520/109460815-3a2af700-7a87-11eb-95d1-7e1d37161a63.jpeg" height="500" width="250" />
-</td></tr></table>
+<p float="left">
+    <img src="https://user-images.githubusercontent.com/53964520/106387211-bede1300-63fe-11eb-92d3-3f69b7cace9d.jpg" height="500" width="250" hspace="30" />
+    <img src="https://user-images.githubusercontent.com/53964520/106387213-c0a7d680-63fe-11eb-8896-5d3c51f5a24b.jpg" height="500" width="250" hspace="30" />
+    <img src="https://user-images.githubusercontent.com/53964520/109460815-3a2af700-7a87-11eb-95d1-7e1d37161a63.jpeg" height="500" width="250" hspace="30" />
+</p>
 
 <table><tr><td>
     <img src="https://user-images.githubusercontent.com/53964520/109460690-fd5f0000-7a86-11eb-9941-0326b381bc07.jpeg" height="500" width="250" />
